@@ -1,10 +1,10 @@
 name: Integration Test
 
 on:
-  push:
+  push: 
 
 jobs:
-  test:
+  main-validation:
     runs-on: ubuntu-latest
     
     steps:
@@ -14,11 +14,11 @@ jobs:
       - name: Test with good file
         id: lint-good
         continue-on-error: true
-        run: python src/lint-ignition-views.py path/to/good_file.json
+        run: python src/lint-ignition-views.py ./tests/integration/good/view.json
       
       - name: Test with bad file
         id: lint-bad
-        run: python src/lint-ignition-views.py path/to/bad_file.json
+        run: python src/lint-ignition-views.py ./tests/integartion/bad/view.json
       
       - name: Check test results
         continue-on-error: false
