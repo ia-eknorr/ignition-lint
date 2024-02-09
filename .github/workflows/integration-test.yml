@@ -9,6 +9,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Self test
-        uses: ia-eknorr/ignition-lint@initial-setup
+        uses: ia-eknorr/ignition-lint@eknorr/initial-setup
         with:
           files: ./tests/integration/view.json
