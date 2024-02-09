@@ -9,6 +9,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Test failure case
+        id: lint
         uses: ia-eknorr/ignition-lint@eknorr/initial-setup
         with:
           files: ./tests/integration/bad/view.json
+      - name: Set outcome variable
+        run: echo "LINT_OUTCOME=${{ job.status }}" >> $GITHUB_ENV  
+      - name: Assert test failure
+        if: env.LINT_OUTCOME != 'success'
+        run: exit 0
+        env:
+          LINT_OUTCOME: ${{ env.LINT_OUTCOME }}
