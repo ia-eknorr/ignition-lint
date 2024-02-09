@@ -23,4 +23,5 @@ runs:
     - name: Lint ignition bad view.json files
       run: |
         python src/lint-ignition-views.py
+      shell: bash
       if: ${{ failure() }}
