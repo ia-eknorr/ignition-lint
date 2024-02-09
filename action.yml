@@ -1,10 +1,12 @@
 name: "Ignition view.json Lint"
 description: "Action to lint ignition view.json files"
 author: "Eric Knorr"
+
 inputs:
   files:
-    description: "Space separated list of ignition files to lint"
+    description: "Space-separated list of ignition files to lint"
     required: true
+
 runs:
   using: "composite"
   steps:
