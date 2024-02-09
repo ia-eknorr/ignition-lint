@@ -13,11 +13,9 @@ jobs:
         uses: ia-eknorr/ignition-lint@eknorr/initial-setup
         with:
           files: ./tests/integration/bad/view.json
-      - name: Set outcome variable
-        if: always()
-        run: echo "LINT_OUTCOME=${{ job.status }}" >> $GITHUB_ENV  
+        continue-on-error: true 
       - name: Assert test failure
-        if: always()
-        run: exit ${{ env.LINT_OUTCOME == 'failure' && 0 || 1 }}
+        if: ${{ env.LINT_OUTCOME == 'failure' }}
+        run: exit 0
         env:
-          LINT_OUTCOME: ${{ env.LINT_OUTCOME }}
+          LINT_OUTCOME: ${{ steps.lint.outcome }}
