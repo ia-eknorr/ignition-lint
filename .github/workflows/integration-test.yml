@@ -12,4 +12,3 @@ jobs:
         uses: ia-eknorr/ignition-lint@eknorr/initial-setup
         with:
           files: ./tests/integration/bad/view.json
-        if: ${{ failure() }}
