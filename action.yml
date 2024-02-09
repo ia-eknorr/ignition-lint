@@ -24,4 +24,3 @@ runs:
       run: |
         python src/lint-ignition-views.py
       shell: bash
-      if: ${{ failure() }}

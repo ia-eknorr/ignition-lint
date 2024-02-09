@@ -8,7 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Self test
+      - name: Test failure case
         uses: ia-eknorr/ignition-lint@eknorr/initial-setup
         with:
-          files: ./tests/integration/view.json
+          files: ./tests/integration/bad/view.json
+        if: ${{ failure() }}
