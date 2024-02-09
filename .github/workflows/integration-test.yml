@@ -37,11 +37,12 @@ jobs:
         continue-on-error: true 
       - name: Assert test failure
         run: |
-          if [${{ env.LINT_OUTCOME == 'success' }}]; then
+          if [ ${{ env.LINT_OUTCOME == 'success' }} ]; then
             echo "Test Passed"
             exit 0
           else
             echo "Test Failed"
+            exit 1
           fi
         env:
           LINT_OUTCOME: ${{ steps.lint.outcome }}
