@@ -7,6 +7,10 @@ inputs:
     description: "Space-separated list of ignition files to lint"
     required: true
 
+branding:
+  icon: "zap"
+  color: "yellow"
+
 runs:
   using: "composite"
   steps:
