@@ -17,6 +17,8 @@ runs:
     - name: Pass inputs to Shell
       run: |
         echo "INPUT_NUM=${{ inputs.files }}" >> $GITHUB_ENV
+      shell: bash
     - name: Lint ignition view.json files
       run: |
         python src/lint-ignition-views.py
+      shell: bash
