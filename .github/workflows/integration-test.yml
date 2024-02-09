@@ -16,7 +16,7 @@ jobs:
         continue-on-error: true 
       - name: Assert test failure
         run: |
-          if [ ${{ env.LINT_OUTCOME == 'failure' }} ]; then
+          if [ ${{ env.LINT_OUTCOME }} == 'failure' ]; then
             echo "Test Passed"
             exit 0
           else
@@ -37,9 +37,9 @@ jobs:
         with:
           files: ./tests/integration/bad/view.json
         continue-on-error: true 
-      - name: Assert test failure
+      - name: Assert test success
         run: |
-          if [ ${{ env.LINT_OUTCOME == 'success' }} ]; then
+          if [ ${{ env.LINT_OUTCOME }} == 'success' ]; then
             echo "Test Passed"
             exit 0
           else

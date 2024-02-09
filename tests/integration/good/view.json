@@ -69,7 +69,7 @@
           },
           {
             "custom": {
-              "VeryVeryBadProperty": "value"
+              "customProperty": "value"
             },
             "meta": {
               "name": "GoodEmbeddedPotato"
@@ -97,7 +97,7 @@
       },
       {
         "custom": {
-          "VeryVeryBadProperty": "value"
+          "customProperty": "value"
         },
         "meta": {
           "name": "EricsGoodPotato"
@@ -116,7 +116,7 @@
       },
       {
         "custom": {
-          "VeryVeryBadProperty": "value"
+          "customProperty": "value"
         },
         "meta": {
           "name": "AnotherGoodPotato"
