@@ -16,11 +16,12 @@ jobs:
         continue-on-error: true 
       - name: Assert test failure
         run: |
-          if [${{ env.LINT_OUTCOME == 'failure' }}]; then
+          if [ ${{ env.LINT_OUTCOME == 'failure' }} ]; then
             echo "Test Passed"
             exit 0
           else
             echo "Test Failed"
+            exit 1
           fi
         env:
           LINT_OUTCOME: ${{ steps.lint.outcome }}
@@ -33,7 +34,7 @@ jobs:
         id: lint
         uses: ia-eknorr/ignition-lint@eknorr/initial-setup
         with:
-          files: ./tests/integration/bad/view.json
+          files: ./tests/integration/good/view.json
         continue-on-error: true 
       - name: Assert test failure
         run: |
