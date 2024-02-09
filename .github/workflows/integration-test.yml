@@ -23,6 +23,7 @@ jobs:
             echo "Test Failed"
             exit 1
           fi
+        continue-on-error: false
         env:
           LINT_OUTCOME: ${{ steps.lint.outcome }}
 
@@ -45,5 +46,6 @@ jobs:
             echo "Test Failed"
             exit 1
           fi
+        continue-on-error: false
         env:
           LINT_OUTCOME: ${{ steps.lint.outcome }}
