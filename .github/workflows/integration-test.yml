@@ -12,7 +12,7 @@ jobs:
         id: lint
         uses: ia-eknorr/ignition-lint@eknorr/initial-setup
         with:
-          files: ./tests/integration/bad/view.json
+          files: ./tests/integration/good/view.json
         continue-on-error: true 
       - name: Assert test failure
         run: |
@@ -35,7 +35,7 @@ jobs:
         id: lint
         uses: ia-eknorr/ignition-lint@eknorr/initial-setup
         with:
-          files: ./tests/integration/good/view.json
+          files: ./tests/integration/bad/view.json
         continue-on-error: true 
       - name: Assert test failure
         run: |
