@@ -7,11 +7,11 @@ inputs:
     required: true
 runs:
   using: "composite"
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
-  - name: Lint ignition view.json files
-    run: |
-      python src/lint-ignition-views.py ${{ inputs.files }}
-    env:
-      INPUT_FILES: ${{ inputs.files }}
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Lint ignition view.json files
+      run: |
+        python src/lint-ignition-views.py ${{ inputs.files }}
+      env:
+        INPUT_FILES: ${{ inputs.files }}
