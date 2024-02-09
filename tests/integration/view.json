@@ -1,0 +1,155 @@
+{
+  "custom": {
+    "PrettyBigIssue": "nope1",
+    "THISIsQuestionable": "nope2",
+    "TRYAGAIN": "nope3",
+    "goodKey": {
+      "EmbeddedNope": "still no"
+    },
+    "this_is_illegal": "nope4"
+  },
+  "params": {
+    "VeryBadPractice": "value"
+  },
+  "propConfig": {
+    "custom.PrettyBigIssue": {
+      "persistent": true
+    },
+    "custom.THISIsQuestionable": {
+      "persistent": true
+    },
+    "custom.TRYAGAIN": {
+      "persistent": true
+    },
+    "custom.goodKey": {
+      "persistent": true
+    },
+    "custom.this_is_illegal": {
+      "persistent": true
+    },
+    "params.VeryBadPractice": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "custom": {
+          "BadLabelCustomProp": "Oops",
+          "key": "value",
+          "labelCustomProperty": "hi",
+          "sneakyBad": {
+            "HaHaHaHaHa": "asdf"
+          }
+        },
+        "meta": {
+          "name": "GoodLabelName"
+        },
+        "position": {
+          "basis": "32px"
+        },
+        "props": {
+          "text": "Bad Label"
+        },
+        "type": "ia.display.label"
+      },
+      {
+        "children": [
+          {
+            "custom": {
+              "key": "value",
+              "notSoBad": "value"
+            },
+            "meta": {
+              "name": "EmbeddedPotato"
+            },
+            "position": {
+              "grow": 1
+            },
+            "props": {
+              "params": {
+                "BadStillDontCheck": "value",
+                "dontCheckMeGood": "value"
+              },
+              "path": "Exchange/MikesPotato"
+            },
+            "type": "ia.display.view"
+          },
+          {
+            "custom": {
+              "VeryVeryBadProperty": "value"
+            },
+            "meta": {
+              "name": "badEmbeddedPotato_0"
+            },
+            "position": {
+              "basis": "320px"
+            },
+            "props": {
+              "params": {
+                "BadStillDontCheck": "value",
+                "dontCheckMeGood": "value"
+              },
+              "path": "Exchange/MikesPotato"
+            },
+            "type": "ia.display.view"
+          }
+        ],
+        "meta": {
+          "name": "FlexContainer"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "type": "ia.container.flex"
+      },
+      {
+        "custom": {
+          "VeryVeryBadProperty": "value"
+        },
+        "meta": {
+          "name": "bad potato"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "props": {
+          "params": {
+            "BadStillDontCheck": "value",
+            "dontCheckMeGood": "value"
+          },
+          "path": "Exchange/MikesPotato"
+        },
+        "type": "ia.display.view"
+      },
+      {
+        "custom": {
+          "VeryVeryBadProperty": "value"
+        },
+        "meta": {
+          "name": "anotherBadPotato"
+        },
+        "position": {
+          "basis": "320px"
+        },
+        "props": {
+          "params": {
+            "BadStillDontCheck": "value",
+            "dontCheckMeGood": "value"
+          },
+          "path": "Exchange/MikesPotato"
+        },
+        "type": "ia.display.view"
+      }
+    ],
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

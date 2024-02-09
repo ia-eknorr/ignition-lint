@@ -1,0 +1,15 @@
+name: Integration Test
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  lint-test-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Self test
+        uses: ia-eknorr/ignition-lint@main
+        with:
+          files: ./tests/integration/view.json
