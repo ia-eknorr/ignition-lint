@@ -10,7 +10,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Test failure case
         id: lint
-        uses: ia-eknorr/ignition-lint@eknorr/initial-setup
+        uses: ia-eknorr/ignition-lint@v0.1
         with:
           files: ./tests/integration/bad/view.json
         continue-on-error: true 
@@ -33,7 +33,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Test success case
         id: lint
-        uses: ia-eknorr/ignition-lint@eknorr/initial-setup
+        uses: ia-eknorr/ignition-lint@v0.1
         with:
           files: ./tests/integration/good/view.json
         continue-on-error: true 
