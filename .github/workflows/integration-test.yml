@@ -17,10 +17,10 @@ jobs:
       - name: Assert test failure
         run: |
           if [ ${{ env.LINT_OUTCOME }} == 'failure' ]; then
-            echo "Test Passed"
+            echo "Test Passed (expected)"
             exit 0
           else
-            echo "Test Failed"
+            echo "Test Failed (expected)"
             exit 1
           fi
         continue-on-error: false
@@ -40,10 +40,10 @@ jobs:
       - name: Assert test success
         run: |
           if [ ${{ env.LINT_OUTCOME }} == 'success' ]; then
-            echo "Test Passed"
+            echo "Test Passed (expected)"
             exit 0
           else
-            echo "Test Failed"
+            echo "Test Failed (expected)"
             exit 1
           fi
         continue-on-error: false
