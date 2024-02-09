@@ -1,17 +1,24 @@
 name: "Ignition view.json Lint"
 description: "Action to lint ignition view.json files"
 author: "Eric Knorr"
+
 inputs:
   files:
-    description: "Space separated list of ignition files to lint"
+    description: "Space-separated list of ignition files to lint"
     required: true
+
+branding:
+  icon: "zap"
+  color: "yellow"
+
 runs:
   using: "composite"
-steps:
-  - name: Checkout repository
-    uses: actions/checkout@v4
-  - name: Lint ignition view.json files
-    run: |
-      python src/lint-ignition-views.py ${{ inputs.files }}
-    env:
-      INPUT_FILES: ${{ inputs.files }}
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Lint ignition bad view.json files
+      run: |
+        python src/lint-ignition-views.py ${{ inputs.files }}
+      shell: bash
+      env:
+        INPUT_FILES: ${{ inputs.files }}
