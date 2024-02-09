@@ -17,7 +17,7 @@ jobs:
         if: always()
         run: echo "LINT_OUTCOME=${{ job.status }}" >> $GITHUB_ENV  
       - name: Assert test failure
-        if: env.LINT_OUTCOME != 'success'
-        run: exit 0
+        if: always()
+        run: exit ${{ env.LINT_OUTCOME == 'failure' && 0 || 1 }}
         env:
           LINT_OUTCOME: ${{ env.LINT_OUTCOME }}
