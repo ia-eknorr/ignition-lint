@@ -1,0 +1,53 @@
+name: Validation Test
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-bad-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test failure case
+        id: lint
+        uses: ia-eknorr/ignition-lint@main
+        with:
+          files: ./tests/integration/bad/view.json
+        continue-on-error: true 
+      - name: Assert test failure
+        run: |
+          if [ ${{ env.LINT_OUTCOME }} == 'failure' ]; then
+            echo "Test Passed (expected)"
+            exit 0
+          else
+            echo "Test Failed (expected)"
+            exit 1
+          fi
+        continue-on-error: false
+        env:
+          LINT_OUTCOME: ${{ steps.lint.outcome }}
+
+  test-good-json:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test success case
+        id: lint
+        uses: ia-eknorr/ignition-lint@main
+        with:
+          files: ./tests/integration/good/view.json
+        continue-on-error: true 
+      - name: Assert test success
+        run: |
+          if [ ${{ env.LINT_OUTCOME }} == 'success' ]; then
+            echo "Test Passed (expected)"
+            exit 0
+          else
+            echo "Test Failed (expected)"
+            exit 1
+          fi
+        continue-on-error: false
+        env:
+          LINT_OUTCOME: ${{ steps.lint.outcome }}

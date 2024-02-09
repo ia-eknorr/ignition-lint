@@ -4,48 +4,29 @@ on:
   push:
 
 jobs:
-  test-bad-json:
+  test:
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v4
-      - name: Test failure case
-        id: lint
-        uses: ia-eknorr/ignition-lint@v0.1
-        with:
-          files: ./tests/integration/bad/view.json
-        continue-on-error: true 
-      - name: Assert test failure
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Test with good file
+        id: lint-good
+        continue-on-error: true
+        run: python src/lint-ignition-views.py path/to/good_file.json
+      
+      - name: Test with bad file
+        id: lint-bad
+        run: python src/lint-ignition-views.py path/to/bad_file.json
+      
+      - name: Check test results
+        continue-on-error: false
         run: |
-          if [ ${{ env.LINT_OUTCOME }} == 'failure' ]; then
-            echo "Test Passed (expected)"
+          if [ ${{ steps.lint-good.outcome }} == 'success' ] && [ ${{ steps.lint-bad.outcome }} == 'failure' ]; then
+            echo "All tests passed"
             exit 0
           else
-            echo "Test Failed (expected)"
+            echo "One or more tests failed"
             exit 1
           fi
-        continue-on-error: false
-        env:
-          LINT_OUTCOME: ${{ steps.lint.outcome }}
-
-  test-good-json:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Test success case
-        id: lint
-        uses: ia-eknorr/ignition-lint@v0.1
-        with:
-          files: ./tests/integration/good/view.json
-        continue-on-error: true 
-      - name: Assert test success
-        run: |
-          if [ ${{ env.LINT_OUTCOME }} == 'success' ]; then
-            echo "Test Passed (expected)"
-            exit 0
-          else
-            echo "Test Failed (expected)"
-            exit 1
-          fi
-        continue-on-error: false
-        env:
-          LINT_OUTCOME: ${{ steps.lint.outcome }}
