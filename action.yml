@@ -14,11 +14,11 @@ runs:
       shell: bash
     - name: Checkout repository
       uses: actions/checkout@v4
-    - name: Pass inputs to Shell
-      run: |
-        echo "INPUT_NUM=${{ inputs.files }}" >> $GITHUB_ENV
-      shell: bash
-    - name: Lint ignition view.json files
-      run: |
-        python src/lint-ignition-views.py
-      shell: bash
+    # - name: Pass inputs to Shell
+    #   run: |
+    #     echo "INPUT_NUM=${{ inputs.files }}" >> $GITHUB_ENV
+    #   shell: bash
+    # - name: Lint ignition view.json files
+    #   run: |
+    #     python src/lint-ignition-views.py
+    #   shell: bash
