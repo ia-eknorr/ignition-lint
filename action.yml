@@ -12,8 +12,9 @@ runs:
   steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+    - name: Pass inputs to Shell
+      run: |
+        echo "INPUT_NUM=${{ inputs.files }}" >> $GITHUB_ENV
     - name: Lint ignition view.json files
       run: |
-        python src/lint-ignition-views.py ${{ inputs.files }}
-      env:
-        INPUT_FILES: ${{ inputs.files }}
+        python src/lint-ignition-views.py
