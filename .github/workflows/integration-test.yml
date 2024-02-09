@@ -14,6 +14,7 @@ jobs:
         with:
           files: ./tests/integration/bad/view.json
       - name: Set outcome variable
+        if: always()
         run: echo "LINT_OUTCOME=${{ job.status }}" >> $GITHUB_ENV  
       - name: Assert test failure
         if: env.LINT_OUTCOME != 'success'
