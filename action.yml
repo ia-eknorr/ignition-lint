@@ -14,11 +14,9 @@ branding:
 runs:
   using: "composite"
   steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
     - name: Lint ignition bad view.json files
       run: |
-        python src/lint-ignition-views.py ${{ inputs.files }}
+        python ${{ github.action_path }}/src/lint-ignition-views.py ${{ inputs.files }}
       shell: bash
       env:
         INPUT_FILES: ${{ inputs.files }}
