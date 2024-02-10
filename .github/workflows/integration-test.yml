@@ -17,11 +17,11 @@ jobs:
 
       - name: Test with good file
         id: lint-good
-        continue-on-error: true
+        continue-on-error: false
         run: python src/lint-ignition-views.py tests/integration/good/view.json
 
       - name: Check test results
-        continue-on-error: false
+        continue-on-error: true
         run: |
           if [ ${{ steps.lint-good.outcome }} == 'success' ] && [ ${{ steps.lint-bad.outcome }} == 'failure' ]; then
             echo "All tests passed"
