@@ -14,11 +14,6 @@ branding:
 runs:
   using: "composite"
   steps:
-    - name: Test
-      run: |
-        ls -lah
-        echo ls
-      shell: bash
     - name: Lint ignition bad view.json files
       run: |
         python ${{ github.action_path }}/src/lint-ignition-views.py ${{ inputs.files }}
