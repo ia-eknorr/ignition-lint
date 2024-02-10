@@ -24,7 +24,7 @@ runs:
         echo ls
       shell: bash
     - name: Lint ignition bad view.json files
-      run: python src/lint-ignition-views.py ${{ inputs.files }}
+      run: python /ia-eknorr/ignition-lint/src/lint-ignition-views.py ${{ inputs.files }}
       shell: bash
       env:
         INPUT_FILES: ${{ inputs.files }}
