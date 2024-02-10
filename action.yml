@@ -20,6 +20,7 @@ runs:
       run: |
         ls -lah
         echo ls
+      shell: bash
     - name: Lint ignition bad view.json files
       run: |
         python src/lint-ignition-views.py ${{ inputs.files }}
