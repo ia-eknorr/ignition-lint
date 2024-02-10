@@ -76,7 +76,7 @@ class JsonLinter:
                 print(error_log)
 
 def main():
-    input_files = os.environ.get("INPUT_FILES")
+    input_files = sys.argv[1:]
     print(input_files)
     if not input_files:
         print("Please provide input files.")
@@ -85,7 +85,7 @@ def main():
     linter = JsonLinter()
     number_of_errors = 0
 
-    for file_path in input_files.split():
+    for file_path in input_files:
         number_of_errors += linter.lint_file(file_path)
 
     if number_of_errors:

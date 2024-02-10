@@ -1,51 +1,34 @@
 name: Integration Test
 
 on:
-  push:
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  test-bad-json:
+  integration-test:
     runs-on: ubuntu-latest
+    
     steps:
-      - uses: actions/checkout@v4
-      - name: Test failure case
-        id: lint
-        uses: ia-eknorr/ignition-lint@eknorr/initial-setup
-        with:
-          files: ./tests/integration/bad/view.json
-        continue-on-error: true 
-      - name: Assert test failure
-        run: |
-          if [ ${{ env.LINT_OUTCOME }} == 'failure' ]; then
-            echo "Test Passed (expected)"
-            exit 0
-          else
-            echo "Test Failed (expected)"
-            exit 1
-          fi
-        continue-on-error: false
-        env:
-          LINT_OUTCOME: ${{ steps.lint.outcome }}
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-  test-good-json:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Test success case
-        id: lint
-        uses: ia-eknorr/ignition-lint@eknorr/initial-setup
-        with:
-          files: ./tests/integration/good/view.json
-        continue-on-error: true 
-      - name: Assert test success
+      - name: Test with bad file
+        id: lint-bad
+        continue-on-error: true
+        run: python src/lint-ignition-views.py tests/integration/bad/view.json
+
+      - name: Test with good file
+        id: lint-good
+        run: python src/lint-ignition-views.py tests/integration/good/view.json
+
+      - name: Check test results
+        continue-on-error: false
         run: |
-          if [ ${{ env.LINT_OUTCOME }} == 'success' ]; then
-            echo "Test Passed (expected)"
+          if [ ${{ steps.lint-good.outcome }} == 'success' ] && [ ${{ steps.lint-bad.outcome }} == 'failure' ]; then
+            echo "All tests passed"
             exit 0
           else
-            echo "Test Failed (expected)"
+            echo "One or more tests failed"
             exit 1
           fi
-        continue-on-error: false
-        env:
-          LINT_OUTCOME: ${{ steps.lint.outcome }}
