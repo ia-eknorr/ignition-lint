@@ -21,7 +21,7 @@ runs:
     - name: Test
       run: |
         ls -lah
-        echo ls
+        echo "Another try"
       shell: bash
     - name: Lint ignition bad view.json files
       run: python /ia-eknorr/ignition-lint/src/lint-ignition-views.py ${{ inputs.files }}
