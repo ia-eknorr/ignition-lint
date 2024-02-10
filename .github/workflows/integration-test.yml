@@ -14,11 +14,11 @@ jobs:
       - name: Test with good file
         id: lint-good
         continue-on-error: true
-        run: python src/lint-ignition-views.py ./tests/integration/good/view.json
+        run: python src/lint-ignition-views.py tests/integration/good/view.json
       
       - name: Test with bad file
         id: lint-bad
-        run: python src/lint-ignition-views.py ./tests/integartion/bad/view.json
+        run: python src/lint-ignition-views.py tests/integartion/bad/view.json
       
       - name: Check test results
         continue-on-error: false
