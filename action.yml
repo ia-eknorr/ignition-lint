@@ -14,16 +14,17 @@ branding:
 runs:
   using: "composite"
   steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+    - name: Install Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
     - name: Test
       run: |
         ls -lah
         echo ls
       shell: bash
     - name: Lint ignition bad view.json files
-      run: |
-        python src/lint-ignition-views.py ${{ inputs.files }}
+      run: python src/lint-ignition-views.py ${{ inputs.files }}
       shell: bash
       env:
         INPUT_FILES: ${{ inputs.files }}
