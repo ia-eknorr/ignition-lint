@@ -14,17 +14,14 @@ branding:
 runs:
   using: "composite"
   steps:
-    - name: Install Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
     - name: Test
       run: |
         ls -lah
-        echo "Another try"
+        echo ls
       shell: bash
     - name: Lint ignition bad view.json files
-      run: python /ia-eknorr/ignition-lint/src/lint-ignition-views.py ${{ inputs.files }}
+      run: |
+        python ${{ github.action_path }}/src/lint-ignition-views.py ${{ inputs.files }}
       shell: bash
       env:
         INPUT_FILES: ${{ inputs.files }}
