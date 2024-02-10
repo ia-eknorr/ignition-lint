@@ -16,6 +16,10 @@ runs:
   steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+    - name: Test
+      run: |
+        ls -lah
+        echo ls
     - name: Lint ignition bad view.json files
       run: |
         python src/lint-ignition-views.py ${{ inputs.files }}
