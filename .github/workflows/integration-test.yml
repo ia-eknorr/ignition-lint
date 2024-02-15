@@ -12,16 +12,16 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
       - name: Test with bad file
         id: lint-bad
         continue-on-error: true
         run: python src/lint-ignition-views.py tests/integration/bad/view.json
-
       - name: Test with good file
         id: lint-good
         run: python src/lint-ignition-views.py tests/integration/good/view.json
-
+      - name: Test with good file
+        id: lint-empty
+        run: python src/lint-ignition-views.py
       - name: Check test results
         continue-on-error: false
         run: |
