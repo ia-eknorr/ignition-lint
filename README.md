@@ -17,16 +17,6 @@ None
 To use this Action in your workflow, create a workflow file (e.g., `.github/workflows/lint-ignition-views.yml`) in your repository and add the following configuration:
 
 ```yaml
-name: Lint Ignition Views
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
 jobs:
   lint:
     name: Lint Ignition Views
@@ -35,7 +25,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
       - name: Run JSON linting
-        uses: ia-eknorr/ignition-lint@v0.1
+        uses: ia-eknorr/ignition-lint@v0.2
         with:
           files: 'path/to/your/view.json'
 ```
