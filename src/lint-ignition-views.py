@@ -79,8 +79,8 @@ def main():
     input_files = sys.argv[1:]
     print(input_files)
     if not input_files:
-        print("Please provide input files.")
-        sys.exit(1)
+        print("No files")
+        sys.exit(0)
 
     linter = JsonLinter()
     number_of_errors = 0
