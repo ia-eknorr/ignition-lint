@@ -6,17 +6,40 @@ inputs:
   files:
     description: "Space-separated list of ignition files to lint"
     required: true
+  component_style:
+    description: "Naming convention style for components"
+    required: false
+    default: "PascalCase"
+  parameter_style:
+    description: "Naming convention style for parameters"
+    required: false
+    default: "camelCase"
+  component_style_rgx:
+    description: "Regex pattern for naming convention style of components"
+    required: false
+  parameter_style_rgx:
+    description: "Regex pattern for naming convention style of parameters"
+    required: false
 
 branding:
   icon: "zap"
-  color: "yellow"
+  color: "orange"
 
 runs:
   using: "composite"
   steps:
-    - name: Lint ignition bad view.json files
+    - name: Lint ignition view.json files
       run: |
-        python ${{ github.action_path }}/src/lint-ignition-views.py ${{ inputs.files }}
+        python ${{ github.action_path }}/src/lint-ignition-views.py \
+          --files "${{ inputs.files }}" \
+          --component-style "${{ inputs.component_style }}" \
+          --parameter-style "${{ inputs.parameter_style }}" \
+          --component-style-rgx "${{ inputs.component_style_rgx }}" \
+          --parameter-style-rgx "${{ inputs.parameter_style_rgx }}"
       shell: bash
       env:
         INPUT_FILES: ${{ inputs.files }}
+        INPUT_COMPONENT_STYLE: ${{ inputs.component_style }}
+        INPUT_PARAMETER_STYLE: ${{ inputs.parameter_style }}
+        INPUT_COMPONENT_STYLE_RGX: ${{ inputs.component_style_rgx }}
+        INPUT_PARAMETER_STYLE_RGX: ${{ inputs.parameter_style_rgx }}
