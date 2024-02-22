@@ -6,9 +6,9 @@ from checker import StyleChecker
 class JsonLinter:
     def __init__(self, component_style, parameter_style, component_style_rgx, parameter_style_rgx):
         # Check if both named style and regex style are provided for the same type
-        if component_style_rgx:
+        if component_style_rgx is not None:
             raise ValueError("Cannot specify both component_style and component_style_rgx. Please choose one or the other.")
-        if parameter_style_rgx:
+        if parameter_style_rgx is not None:
             raise ValueError("Cannot specify both parameter_style and parameter_style_rgx. Please choose one or the other.")
 
         self.parameterAreas = ["custom", "params"]
