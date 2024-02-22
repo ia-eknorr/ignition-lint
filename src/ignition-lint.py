@@ -4,7 +4,7 @@ import argparse
 from checker import StyleChecker
 
 class JsonLinter:
-    def __init__(self, component_style="PascalCase", parameter_style="snake_case", component_style_rgx=None, parameter_style_rgx=None):
+    def __init__(self, component_style, parameter_style, component_style_rgx, parameter_style_rgx):
         # Check if both named style and regex style are provided for the same type
         if component_style_rgx:
             raise ValueError("Cannot specify both component_style and component_style_rgx. Please choose one or the other.")
