@@ -17,9 +17,11 @@ inputs:
   component_style_rgx:
     description: "Regex pattern for naming convention style of components"
     required: false
+    default: None
   parameter_style_rgx:
     description: "Regex pattern for naming convention style of parameters"
     required: false
+    default: None
 
 branding:
   icon: "zap"
@@ -30,7 +32,7 @@ runs:
   steps:
     - name: Lint ignition view.json files
       run: |
-        python ${{ github.action_path }}/src/lint-ignition-views.py \
+        python ${{ github.action_path }}/src/ignition-lint.py \
           --files "${{ inputs.files }}" \
           --component-style "${{ inputs.component_style }}" \
           --parameter-style "${{ inputs.parameter_style }}" \
