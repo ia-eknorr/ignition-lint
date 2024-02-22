@@ -92,8 +92,8 @@ class JsonLinter:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--files', required=True, help='Space-separated list of ignition files to lint')
-    parser.add_argument('--component-style', default='PascalCase', help='Naming convention style for components')
-    parser.add_argument('--parameter-style', default='snake_case', help='Naming convention style for parameters')
+    parser.add_argument('--component-style', help='Naming convention style for components')
+    parser.add_argument('--parameter-style', help='Naming convention style for parameters')
     parser.add_argument('--component-style-rgx', help='Regex pattern for naming convention style of components')
     parser.add_argument('--parameter-style-rgx', help='Regex pattern for naming convention style of parameters')
     args = parser.parse_args()
