@@ -9,11 +9,11 @@ inputs:
   component_style:
     description: "Naming convention style for components"
     required: false
-    default: "PascalCase"
+    default: None
   parameter_style:
     description: "Naming convention style for parameters"
     required: false
-    default: "camelCase"
+    default: None
   component_style_rgx:
     description: "Regex pattern for naming convention style of components"
     required: false

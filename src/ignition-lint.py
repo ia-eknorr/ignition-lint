@@ -6,11 +6,14 @@ from checker import StyleChecker
 class JsonLinter:
     def __init__(self, component_style, parameter_style, component_style_rgx, parameter_style_rgx):
         # Check if both named style and regex style are provided for the same type
-        if component_style_rgx is not None:
+        if component_style_rgx is not None and component_style is not None :
             raise ValueError("Cannot specify both component_style and component_style_rgx. Please choose one or the other.")
-        if parameter_style_rgx is not None:
+        if parameter_style_rgx is not None and parameter_style is not None:
             raise ValueError("Cannot specify both parameter_style and parameter_style_rgx. Please choose one or the other.")
-
+        if component_style_rgx is None and component_style is None :
+            raise ValueError("Component naming style not specified. Use either component_style or component_style_rgx.")
+        if parameter_style_rgx is None and parameter_style is None :
+            raise ValueError("Parameter naming style not specified. Use either parameter_style or parameter_style_rgx.")
         self.parameterAreas = ["custom", "params"]
         self.componentAreas = ["root", "children"]
         self.keysToSkip = ["props", "position", "type", "meta", "propConfig", "scripts"]
@@ -19,6 +22,8 @@ class JsonLinter:
         self.component_style_rgx = component_style_rgx
         self.parameter_style_rgx = parameter_style_rgx
 
+        print(component_style)
+        print(component_style_rgx)
         self.component_style_checker = StyleChecker(component_style_rgx) if component_style_rgx is not None else StyleChecker(component_style)
         self.parameter_style_checker = StyleChecker(parameter_style_rgx) if parameter_style_rgx is not None else StyleChecker(parameter_style)
 
@@ -91,7 +96,7 @@ class JsonLinter:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--files', required=True, help='Space-separated list of ignition files to lint')
+    parser.add_argument('--files', default="", help='Space-separated list of ignition files to lint')
     parser.add_argument('--component-style', help='Naming convention style for components')
     parser.add_argument('--parameter-style', help='Naming convention style for parameters')
     parser.add_argument('--component-style-rgx', help='Regex pattern for naming convention style of components')
@@ -102,6 +107,8 @@ def main():
     if not input_files:
         print("No files")
         sys.exit(0)
+
+    print(args)
 
     linter = JsonLinter(
         component_style=args.component_style,
