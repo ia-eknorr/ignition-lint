@@ -1,0 +1,47 @@
+{
+  "custom": {
+    "custom_view_param": "value"
+  },
+  "params": {
+    "view_param": "value"
+  },
+  "propConfig": {
+    "custom.custom_view_param": {
+      "persistent": true
+    },
+    "params.view_param": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "custom": {
+          "component_custom_param": "value"
+        },
+        "meta": {
+          "name": "icon_snake_case"
+        },
+        "position": {
+          "basis": "30px"
+        },
+        "props": {
+          "path": "material/insert_emoticon"
+        },
+        "type": "ia.display.icon"
+      }
+    ],
+    "custom": {
+      "root_custom_param": "value"
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

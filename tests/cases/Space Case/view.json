@@ -1,0 +1,47 @@
+{
+  "custom": {
+    "CustomViewParam": "value"
+  },
+  "params": {
+    "ViewParam": "value"
+  },
+  "propConfig": {
+    "custom.CustomViewParam": {
+      "persistent": true
+    },
+    "params.ViewParam": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "custom": {
+          "ComponentCustomParam": "value"
+        },
+        "meta": {
+          "name": "Icon Space Case"
+        },
+        "position": {
+          "basis": "30px"
+        },
+        "props": {
+          "path": "material/insert_emoticon"
+        },
+        "type": "ia.display.icon"
+      }
+    ],
+    "custom": {
+      "RootCustomParam": "value"
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}

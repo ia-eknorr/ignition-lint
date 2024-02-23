@@ -12,20 +12,32 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Test with bad file
-        id: lint-bad
+      - name: Test with inconsistent style
+        id: lint-inconsistent
         continue-on-error: true
-        run: python src/ignition-lint.py --files tests/integration/bad/view.json --parameter-style camelCase --component-style PascalCase
-      - name: Test with good file
-        id: lint-good
-        run: python src/ignition-lint.py --files tests/integration/good/view.json --parameter-style camelCase --component-style PascalCase
+        run: python src/ignition-lint.py --files tests/cases/inconsistentCase/view.json --component-style PascalCase --parameter-style camelCase
+      - name: Test with preferred style
+        id: lint-preferred
+        run: python src/ignition-lint.py --files tests/cases/PreferredStyle/view.json --component-style PascalCase --parameter-style camelCase
+      - name: Test with camelCase
+        id: lint-camel
+        run: python src/ignition-lint.py --files tests/cases/camelCase/view.json --component-style camelCase --parameter-style camelCase
+      - name: Test with snake_case
+        id: lint-snake
+        run: python src/ignition-lint.py --files tests/cases/snake_case/view.json --component-style snake_case --parameter-style snake_case
+      - name: Test with PascalCase
+        id: lint-pascal
+        run: python src/ignition-lint.py --files tests/cases/PascalCase/view.json --component-style PascalCase --parameter-style PascalCase
+      - name: Test with UPPER_CASE
+        id: lint-upper
+        run: python src/ignition-lint.py --files tests/cases/UPPER_CASE/view.json --component-style UPPER_CASE --parameter-style UPPER_CASE
       - name: Test with no files
         id: lint-empty
-        run: python src/ignition-lint.py --files "" --parameter-style camelCase --component-style PascalCase
+        run: python src/ignition-lint.py --files "" --component-style PascalCase --parameter-style camelCase
       - name: Check test results
         continue-on-error: false
         run: |
-          if [ ${{ steps.lint-good.outcome }} == 'success' ] && [ ${{ steps.lint-bad.outcome }} == 'failure' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ]; then
+          if [ ${{ steps.lint-preferred.outcome }} == 'success' ] && [ ${{ steps.lint-inconsistent.outcome }} == 'failure' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ]; then
             echo "All tests passed"
             exit 0
           else
