@@ -1,0 +1,47 @@
+{
+  "custom": {
+    "customViewParam": "value"
+  },
+  "params": {
+    "viewParam": "value"
+  },
+  "propConfig": {
+    "custom.customViewParam": {
+      "persistent": true
+    },
+    "params.viewParam": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "custom": {
+          "componentCustomParam": "value"
+        },
+        "meta": {
+          "name": "iconCamelCase"
+        },
+        "position": {
+          "basis": "30px"
+        },
+        "props": {
+          "path": "material/insert_emoticon"
+        },
+        "type": "ia.display.icon"
+      }
+    ],
+    "custom": {
+      "rootCustomParam": "value"
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}
