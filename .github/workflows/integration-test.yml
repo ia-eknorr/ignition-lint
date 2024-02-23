@@ -15,13 +15,13 @@ jobs:
       - name: Test with bad file
         id: lint-bad
         continue-on-error: true
-        run: python src/ignition-lint.py --files tests/integration/bad/view.json --parameter_style camelCase --component_style PascalCase
+        run: python src/ignition-lint.py --files tests/integration/bad/view.json --parameter-style camelCase --component-style PascalCase
       - name: Test with good file
         id: lint-good
-        run: python src/ignition-lint.py --files tests/integration/good/view.json --parameter_style camelCase --component_style PascalCase
+        run: python src/ignition-lint.py --files tests/integration/good/view.json --parameter-style camelCase --component-style PascalCase
       - name: Test with no files
         id: lint-empty
-        run: python src/ignition-lint.py --files "" --parameter_style camelCase --component_style PascalCase
+        run: python src/ignition-lint.py --files "" --parameter-style camelCase --component-style PascalCase
       - name: Check test results
         continue-on-error: false
         run: |
