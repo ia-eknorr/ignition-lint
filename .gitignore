@@ -1,2 +1,5 @@
 # .vscode directory
 .vscode
+
+# pycache
+__pycache__
