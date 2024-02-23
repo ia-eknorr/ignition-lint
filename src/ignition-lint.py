@@ -22,8 +22,6 @@ class JsonLinter:
         self.component_style_rgx = component_style_rgx
         self.parameter_style_rgx = parameter_style_rgx
 
-        print(component_style)
-        print(component_style_rgx)
         self.component_style_checker = StyleChecker(component_style_rgx) if component_style_rgx is not None else StyleChecker(component_style)
         self.parameter_style_checker = StyleChecker(parameter_style_rgx) if parameter_style_rgx is not None else StyleChecker(parameter_style)
 
@@ -107,8 +105,6 @@ def main():
     if not input_files:
         print("No files")
         sys.exit(0)
-
-    print(args)
 
     linter = JsonLinter(
         component_style=args.component_style,
