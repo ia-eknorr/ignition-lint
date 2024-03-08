@@ -6,10 +6,10 @@ from checker import StyleChecker
 class JsonLinter:
     def __init__(self, component_style, parameter_style, component_style_rgx, parameter_style_rgx):
         # Check if both named style and regex style are provided for the same type
-        if component_style_rgx is not None and component_style is not None:
+        if component_style_rgx not in [None, ""] and component_style not in [None, ""]:
             raise ValueError("Cannot specify both (component_style: {}, component_style_rgx: {}). Please choose one or the other.".format(component_style, component_style_rgx))
 
-        if parameter_style_rgx is not None and parameter_style is not None:
+        if parameter_style_rgx not in [None, ""] and parameter_style not in [None, ""]:
             raise ValueError("Cannot specify both (parameter_style: {}, parameter_style_rgx: {}). Please choose one or the other.".format(parameter_style, parameter_style_rgx))
 
         if component_style_rgx is None and component_style is None:
