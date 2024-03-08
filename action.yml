@@ -9,19 +9,15 @@ inputs:
   component_style:
     description: "Naming convention style for components"
     required: false
-    default: None
   parameter_style:
     description: "Naming convention style for parameters"
     required: false
-    default: None
   component_style_rgx:
     description: "Regex pattern for naming convention style of components"
     required: false
-    default: None
   parameter_style_rgx:
     description: "Regex pattern for naming convention style of parameters"
     required: false
-    default: None
 
 branding:
   icon: "zap"
