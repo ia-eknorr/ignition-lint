@@ -123,6 +123,8 @@ def main():
 
     if number_of_errors:
         sys.exit(1)
+    else:
+        print("No style inconsistencies found")
 
 if __name__ == "__main__":
     main()
