@@ -15,28 +15,28 @@ jobs:
       - name: Test with inconsistent style
         id: lint-inconsistent
         continue-on-error: true
-        run: python src/ignition-lint.py --files tests/cases/inconsistentCase/view.json --component-style PascalCase --parameter-style camelCase
+        run: python src/ignition_lint.py --files tests/cases/inconsistentCase/view.json --component-style PascalCase --parameter-style camelCase
       - name: Test with preferred style
         id: lint-preferred
-        run: python src/ignition-lint.py --files tests/cases/PreferredStyle/view.json --component-style PascalCase --parameter-style camelCase
+        run: python src/ignition_lint.py --files tests/cases/PreferredStyle/view.json --component-style PascalCase --parameter-style camelCase
       - name: Test with camelCase
         id: lint-camel
-        run: python src/ignition-lint.py --files tests/cases/camelCase/view.json --component-style camelCase --parameter-style camelCase
+        run: python src/ignition_lint.py --files tests/cases/camelCase/view.json --component-style camelCase --parameter-style camelCase
       - name: Test with snake_case
         id: lint-snake
-        run: python src/ignition-lint.py --files tests/cases/snake_case/view.json --component-style snake_case --parameter-style snake_case
+        run: python src/ignition_lint.py --files tests/cases/snake_case/view.json --component-style snake_case --parameter-style snake_case
       - name: Test with PascalCase
         id: lint-pascal
-        run: python src/ignition-lint.py --files tests/cases/PascalCase/view.json --component-style PascalCase --parameter-style PascalCase
+        run: python src/ignition_lint.py --files tests/cases/PascalCase/view.json --component-style PascalCase --parameter-style PascalCase
       - name: Test with UPPER_CASE
         id: lint-upper
-        run: python src/ignition-lint.py --files tests/cases/UPPER_CASE/view.json --component-style UPPER_CASE --parameter-style UPPER_CASE
+        run: python src/ignition_lint.py --files tests/cases/UPPER_CASE/view.json --component-style UPPER_CASE --parameter-style UPPER_CASE
       - name: Test with kebab-case (regex)
         id: lint-regex
-        run: python src/ignition-lint.py --files tests/cases/kebab-case/view.json --component-style-rgx "^[a-z]+(_[a-z]+)*$"  --parameter-style "^[a-z]+(_[a-z]+)*$"
+        run: python src/ignition_lint.py --files tests/cases/kebab-case/view.json --component-style-rgx "^[a-z]+(_[a-z]+)*$"  --parameter-style "^[a-z]+(_[a-z]+)*$"
       - name: Test with no files
         id: lint-empty
-        run: python src/ignition-lint.py --files "" --component-style PascalCase --parameter-style camelCase
+        run: python src/ignition_lint.py --files "" --component-style PascalCase --parameter-style camelCase
       - name: Check test results
         continue-on-error: false
         run: |
