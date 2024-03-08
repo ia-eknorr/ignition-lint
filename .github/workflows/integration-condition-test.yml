@@ -31,6 +31,9 @@ jobs:
       - name: Test with UPPER_CASE
         id: lint-upper
         run: python src/ignition-lint.py --files tests/cases/UPPER_CASE/view.json --component-style UPPER_CASE --parameter-style UPPER_CASE
+      - name: Test with kebab-case (regex)
+        id: lint-regex
+        run: python src/ignition-lint.py --files tests/cases/kebab-case/view.json --component-style-rgx "^[a-z]+(_[a-z]+)*$"  --parameter-style "^[a-z]+(_[a-z]+)*$"
       - name: Test with no files
         id: lint-empty
         run: python src/ignition-lint.py --files "" --component-style PascalCase --parameter-style camelCase
