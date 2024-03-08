@@ -6,14 +6,18 @@ from checker import StyleChecker
 class JsonLinter:
     def __init__(self, component_style, parameter_style, component_style_rgx, parameter_style_rgx):
         # Check if both named style and regex style are provided for the same type
-        if component_style_rgx is not None and component_style is not None :
-            raise ValueError("Cannot specify both component_style and component_style_rgx. Please choose one or the other.")
+        if component_style_rgx is not None and component_style is not None:
+            raise ValueError("Cannot specify both (component_style: {}, component_style_rgx: {}). Please choose one or the other.".format(component_style, component_style_rgx))
+
         if parameter_style_rgx is not None and parameter_style is not None:
-            raise ValueError("Cannot specify both parameter_style and parameter_style_rgx. Please choose one or the other.")
-        if component_style_rgx is None and component_style is None :
-            raise ValueError("Component naming style not specified. Use either component_style or component_style_rgx.")
-        if parameter_style_rgx is None and parameter_style is None :
-            raise ValueError("Parameter naming style not specified. Use either parameter_style or parameter_style_rgx.")
+            raise ValueError("Cannot specify both (parameter_style: {}, parameter_style_rgx: {}). Please choose one or the other.".format(parameter_style, parameter_style_rgx))
+
+        if component_style_rgx is None and component_style is None:
+            raise ValueError("Component naming style not specified. Use either (component_style) or (component_style_rgx).")
+
+        if parameter_style_rgx is None and parameter_style is None:
+            raise ValueError("Parameter naming style not specified. Use either (parameter_style) or (parameter_style_rgx).")
+
         self.parameterAreas = ["custom", "params"]
         self.componentAreas = ["root", "children"]
         self.keysToSkip = ["props", "position", "type", "meta", "propConfig", "scripts"]
