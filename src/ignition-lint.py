@@ -121,10 +121,10 @@ def main():
     for file_path in input_files:
         number_of_errors += linter.lint_file(file_path)
 
-    if number_of_errors:
-        sys.exit(1)
-    else:
+    if not number_of_errors:
         print("No style inconsistencies found")
+        sys.exit(0)
+    sys.exit(1)
 
 if __name__ == "__main__":
     main()
