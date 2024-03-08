@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run JSON linting
-        uses: ia-eknorr/ignition-lint@bug/issue-14
+        uses: ia-eknorr/ignition-lint@main
         with:
           files: tests/cases/PreferredStyle/view.json
           component_style: 'PascalCase'
