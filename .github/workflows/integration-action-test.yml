@@ -1,10 +1,10 @@
-name: Integration Test
+name: Action Integration Test
 
 on:
   push: 
 
 jobs:
-  lint:
+  integration-test:
     name: Test ignition-lint action
     runs-on: ubuntu-latest
     steps:

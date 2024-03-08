@@ -1,4 +1,4 @@
-name: Integration Test
+name: Condition Integration Test
 
 on:
   pull_request:
