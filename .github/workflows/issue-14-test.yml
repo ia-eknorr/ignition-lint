@@ -1,0 +1,22 @@
+# use github action ia-eknorr/ignition-lint@bug/issue-14 with all options on dispatch
+#
+# This is a basic workflow to help you get started with Actions
+
+name: Integration Test
+
+on:
+  push: 
+
+jobs:
+  lint:
+    name: Lint Ignition Views
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run JSON linting
+        uses: ia-eknorr/ignition-lint@bug/issue-14
+        with:
+          files: tests/cases/PreferredStyle/view.json
+          component_style: 'PascalCase'
+          parameter_style: 'camelCase'
+
