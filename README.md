@@ -10,7 +10,7 @@ Space-separated list of paths to the Ignition `view.json` files to be linted.
 
 ### `component_style` (optional)
 
-Naming convention style for components. Default is None. Either `component_style` or `component_style_rgx` should be selected, but not both.
+Naming convention style for components. Cannot be used with `component_style_rgx`.
 
 Options:
 
@@ -21,7 +21,7 @@ Options:
 
 ### `parameter_style` (optional)
 
-Naming convention style for parameters. Default is None. Either `parameter_style` or `parameter_style_rgx` should be selected, but not both.
+Naming convention style for parameters. Cannot be used with `parameter_style_rgx`.
 
 Options:
 
@@ -32,11 +32,11 @@ Options:
 
 ### `component_style_rgx` (optional)
 
-Regex pattern for naming convention style of components. Default is None. Either `component_style` or `component_style_rgx` should be selected, but not both.
+Regex pattern for naming convention style of components. Cannot be used with `component_style`.
 
 ### `parameter_style_rgx` (optional)
 
-Regex pattern for naming convention style of parameters. Default is None. Either `parameter_style` or `parameter_style_rgx` should be selected, but not both.
+Regex pattern for naming convention style of parameters. Cannot be used with `parameter_style`.
 
 ## Outputs
 
@@ -44,24 +44,39 @@ None
 
 ## Usage
 
-To use this Action in your workflow, create a workflow file (e.g., `.github/workflows/lint-ignition-views.yml`) in your repository and add the following configuration:
+To use this Action in your workflow, create a workflow file (e.g., `.github/workflows/lint-ignition-views.yml`) in your repository and add one of the following configurations:
 
-```yaml
-jobs:
-  lint:
-    name: Lint Ignition Views
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Run JSON linting
-        uses: ia-eknorr/ignition-lint@v1.0
-        with:
-          files: 'path/to/your/view.json'
-          component_style: 'PascalCase'
-          parameter_style: 'camelCase'
+* Standard supported style definition
 
-```
+  ```yaml
+  jobs:
+    lint:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Lint files
+          uses: ia-eknorr/ignition-lint@v1.1
+          with:
+            files: "path/to/your/view.json"
+            component_style: "PascalCase"
+            parameter_style: "camelCase"
+  ```
+
+* Regex style definition (kebab-case example)
+
+  ```yaml
+  jobs:
+    lint:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Lint files
+          uses: ia-eknorr/ignition-lint@v1.1
+          with:
+            files: "path/to/your/view.json"
+            component_style: "^[a-z]+(-[a-z]+)*$"
+            parameter_style: "^[a-z]+(-[a-z]+)*$"
+  ```
 
 ### Action scenarios
 
