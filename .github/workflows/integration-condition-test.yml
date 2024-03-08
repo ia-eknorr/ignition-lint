@@ -40,7 +40,7 @@ jobs:
       - name: Check test results
         continue-on-error: false
         run: |
-          if [ ${{ steps.lint-preferred.outcome }} == 'success' ] && [ ${{ steps.lint-inconsistent.outcome }} == 'failure' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ]; then
+          if [ ${{ steps.lint-preferred.outcome }} == 'success' ] && [ ${{ steps.lint-inconsistent.outcome }} == 'failure' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ] && [ ${{ steps.lint-empty.outcome }} == 'success' ] && [ ${{ steps.lint-regex.outcome }} == 'success' ]; then
             echo "All tests passed"
             exit 0
           else
