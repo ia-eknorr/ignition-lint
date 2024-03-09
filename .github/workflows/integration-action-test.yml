@@ -1,7 +1,11 @@
 name: Action Integration Test
 
-on:
-  push: 
+on: 
+  push:
+  pull_request:
+    branches: [main]
+    types: [closed]
+
 
 jobs:
   standard-style-test:
