@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run JSON linting
-        uses: ia-eknorr/ignition-lint@feature/prep-v1.1
+        uses: ia-eknorr/ignition-lint@feature/v1.1
         with:
           files: tests/cases/PreferredStyle/view.json
           component_style: PascalCase
@@ -21,7 +21,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Run JSON linting
-        uses: ia-eknorr/ignition-lint@feature/prep-v1.1
+        uses: ia-eknorr/ignition-lint@feature/v1.1
         with:
           files: tests/cases/kebab-case/view.json
           component_style: "^[a-z]+(-[a-z]+)*$"
