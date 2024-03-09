@@ -29,23 +29,26 @@ class JsonLinter:
         self.parameter_style_rgx = parameter_style_rgx
         self.errors = {"components": [], "parameters": []}
 
-        self.component_style_checker = StyleChecker(component_style_rgx) if component_style_rgx is not None else StyleChecker(component_style)
-        self.parameter_style_checker = StyleChecker(parameter_style_rgx) if parameter_style_rgx is not None else StyleChecker(parameter_style)
+        self.component_style_checker = StyleChecker(component_style_rgx) if component_style_rgx not in [None, ""] else StyleChecker(component_style)
+        self.parameter_style_checker = StyleChecker(parameter_style_rgx) if parameter_style_rgx not in [None, ""] else StyleChecker(parameter_style)
 
     
     def lint_file(self, file_path: str) -> int:
         if not os.path.exists(file_path):
-            return f"File not found: {file_path}"
+            print(f"File not found: {file_path}")
+            return 0
 
         with open(file_path, "r") as file:
             try:
                 data = json.load(file)
                 self.check_component_names(data, self.errors)
             except json.JSONDecodeError as e:
-                return f"Error parsing file {file_path}: {e}"
+                print(f"Error parsing file {file_path}: {e}")
+                return 0
 
         self.print_errors(file_path, self.errors)
-        return len(self.errors['components']) + len(self.errors['parameters'])
+        num_errors = len(self.errors['components']) + len(self.errors['parameters'])
+        return num_errors
 
     def check_parameter_names(self, data, errors: dict, parent_key: str = ""):
         for key, value in data.items():

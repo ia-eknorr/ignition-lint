@@ -32,7 +32,7 @@ class JsonLinterTests(unittest.TestCase):
 
     def test_lint_file_with_invalid_json(self):
         file_path = "./nonexistent/test/view.json"
-        expected_errors = "File not found: ./nonexistent/test/view.json"
+        expected_errors = 0
 
         with patch("builtins.open", create=True) as mock_open:
             mock_file = mock_open.return_value.__enter__.return_value
