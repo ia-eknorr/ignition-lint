@@ -11,12 +11,13 @@ class StyleChecker:
     @staticmethod
     def is_camel_case(name: str) -> bool:
         """Check if the name follows camelCase convention."""
-        return bool(re.match(r"^[a-z]+(?:[A-Z][a-z]*)*$", name))
+        return bool(re.match(r"^[a-z][a-z0-9]*(([A-Z][a-z0-9]+)*[A-Z]?|([a-z0-9]+[A-Z])*|[A-Z])$", name))
+        # return bool(re.match(r"^[a-z]+(?:[0-9a-zA-Z]*)*$", name))
 
     @staticmethod
     def is_pascal_case(name: str) -> bool:
         """Check if the name follows PascalCase convention."""
-        return bool(re.match(r"^[A-Z][a-zA-Z0-9]*$", name))
+        return bool(re.match(r"^[A-Z](([a-z0-9]+[A-Z]?)*)$", name))
 
     @staticmethod
     def is_upper_case(name: str) -> bool:

@@ -28,7 +28,7 @@ runs:
   steps:
     - name: Lint ignition view.json files
       run: |
-        python ${{ github.action_path }}/src/ignition-lint.py \
+        python ${{ github.action_path }}/src/ignition_lint.py \
           --files "${{ inputs.files }}" \
           --component-style "${{ inputs.component_style }}" \
           --parameter-style "${{ inputs.parameter_style }}" \

@@ -1,0 +1,47 @@
+{
+  "custom": {
+    "custom-view-param": "value"
+  },
+  "params": {
+    "view-param": "value"
+  },
+  "propConfig": {
+    "custom.custom-view-param": {
+      "persistent": true
+    },
+    "params.view-param": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
+  "props": {},
+  "root": {
+    "children": [
+      {
+        "custom": {
+          "component-custom-param": "value"
+        },
+        "meta": {
+          "name": "icon-kebab-case"
+        },
+        "position": {
+          "basis": "30px"
+        },
+        "props": {
+          "path": "material/insert_emoticon"
+        },
+        "type": "ia.display.icon"
+      }
+    ],
+    "custom": {
+      "root-custom-param": "value"
+    },
+    "meta": {
+      "name": "root"
+    },
+    "props": {
+      "direction": "column"
+    },
+    "type": "ia.container.flex"
+  }
+}
