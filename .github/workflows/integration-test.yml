@@ -6,26 +6,23 @@ on:
     branches: [main]
     types: [closed]
 
-
 jobs:
-  standard-style-test:
-    name: Test standard style ignition-lint action
+  standard-style:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run JSON linting
-        uses: ia-eknorr/ignition-lint@feature/v1.1
+      - name: Lint json file
+        uses: ia-eknorr/ignition-lint@v1.1
         with:
           files: tests/cases/PreferredStyle/view.json
           component_style: PascalCase
           parameter_style: camelCase
-  regex-style-test:
-    name: Test regex style ignition-lint action
+  regex-style:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Run JSON linting
-        uses: ia-eknorr/ignition-lint@feature/v1.1
+      - name: Lint json file
+        uses: ia-eknorr/ignition-lint@v1.1
         with:
           files: tests/cases/kebab-case/view.json
           component_style: "^[a-z]+(-[a-z]+)*$"
