@@ -1,4 +1,4 @@
-name: "Ignition view.json Lint"
+name: "Ignition Lint"
 description: "Action to lint ignition view.json files"
 author: "Eric Knorr"
 
