@@ -1,7 +1,9 @@
 import json
 import sys
 import argparse
+import os
 from checker import StyleChecker
+
 
 class JsonLinter:
     def __init__(self, component_style, parameter_style, component_style_rgx, parameter_style_rgx):
@@ -25,23 +27,25 @@ class JsonLinter:
         self.parameter_style = parameter_style
         self.component_style_rgx = component_style_rgx
         self.parameter_style_rgx = parameter_style_rgx
+        self.errors = {"components": [], "parameters": []}
 
         self.component_style_checker = StyleChecker(component_style_rgx) if component_style_rgx is not None else StyleChecker(component_style)
         self.parameter_style_checker = StyleChecker(parameter_style_rgx) if parameter_style_rgx is not None else StyleChecker(parameter_style)
 
     
     def lint_file(self, file_path: str) -> int:
-        errors = {"components": [], "parameters": []}
+        if not os.path.exists(file_path):
+            return f"File not found: {file_path}"
 
         with open(file_path, "r") as file:
             try:
                 data = json.load(file)
-                self.check_component_names(data, errors)
+                self.check_component_names(data, self.errors)
             except json.JSONDecodeError as e:
-                errors["components"].append(f"Error parsing JSON: {e}")
+                return f"Error parsing file {file_path}: {e}"
 
-        self.print_errors(file_path, errors)
-        return len(errors['components']) + len(errors['parameters'])
+        self.print_errors(file_path, self.errors)
+        return len(self.errors['components']) + len(self.errors['parameters'])
 
     def check_parameter_names(self, data, errors: dict, parent_key: str = ""):
         for key, value in data.items():
