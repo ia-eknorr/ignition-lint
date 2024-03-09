@@ -29,8 +29,8 @@ class JsonLinter:
         self.parameter_style_rgx = parameter_style_rgx
         self.errors = {"components": [], "parameters": []}
 
-        self.component_style_checker = StyleChecker(component_style_rgx) if component_style_rgx is not None else StyleChecker(component_style)
-        self.parameter_style_checker = StyleChecker(parameter_style_rgx) if parameter_style_rgx is not None else StyleChecker(parameter_style)
+        self.component_style_checker = StyleChecker(component_style_rgx) if component_style_rgx not in [None, ""] else StyleChecker(component_style)
+        self.parameter_style_checker = StyleChecker(parameter_style_rgx) if parameter_style_rgx not in [None, ""] else StyleChecker(parameter_style)
 
     
     def lint_file(self, file_path: str) -> int:
