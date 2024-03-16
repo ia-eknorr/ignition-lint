@@ -3,6 +3,7 @@ import sys
 import argparse
 import os
 from checker import StyleChecker
+import glob
 
 
 class JsonLinter:
@@ -105,16 +106,20 @@ class JsonLinter:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--files', default="", help='Space-separated list of ignition files to lint')
+    parser.add_argument('--files', default="**/view.json", help='Space-separated list of ignition files or glob patterns to lint')
     parser.add_argument('--component-style', help='Naming convention style for components')
     parser.add_argument('--parameter-style', help='Naming convention style for parameters')
     parser.add_argument('--component-style-rgx', help='Regex pattern for naming convention style of components')
     parser.add_argument('--parameter-style-rgx', help='Regex pattern for naming convention style of parameters')
     args = parser.parse_args()
 
-    input_files = args.files.split()
+    input_patterns = args.files.split()
+    input_files = []
+    for pattern in input_patterns:
+        input_files.extend(glob.glob(pattern, recursive=True))
+
     if not input_files:
-        print("No files")
+        print("No files found matching the specified patterns")
         sys.exit(0)
 
     linter = JsonLinter(
