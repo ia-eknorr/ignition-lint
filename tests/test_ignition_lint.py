@@ -3,7 +3,7 @@ import os
 import sys
 import os
 from unittest.mock import patch
-from json import JSONDecodeError
+import glob
 
 # Add the src directory to the PYTHONPATH
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
@@ -102,6 +102,17 @@ class JsonLinterTests(unittest.TestCase):
         self.linter.check_parameter_names(data, self.linter.errors)
 
         self.assertEqual(self.linter.errors, expected_errors)
+
+    def test_lint_file_with_glob_pattern(self):
+        valid_file_path = "**/PreferredStyle/view.json"
+        invalid_file_path = "nonexistent/**/view.json"
+
+        self.linter.lint_file(valid_file_path)
+        self.assertEqual(self.linter.files_linted, 1)
+
+        self.linter.lint_file(invalid_file_path)
+        self.assertEqual(self.linter.files_linted, 1)
+
 
 if __name__ == "__main__":
     unittest.main()

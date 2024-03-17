@@ -4,9 +4,11 @@ This GitHub Action performs linting on Ignition `view.json` files to ensure prop
 
 ## Inputs
 
-### `files` (required)
+### `files` (optional)
 
-Space-separated list of paths to the Ignition `view.json` files to be linted.
+Space-separated list of paths or glob patterns to the Ignition `view.json` files to be linted. Glob patterns are supported, e.g., `**/view.json` to match all `view.json` files recursively.
+
+The default value is `**/view.json` to capture all Perspective views.
 
 ### `component_style` (optional)
 
