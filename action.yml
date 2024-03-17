@@ -26,6 +26,17 @@ branding:
 runs:
   using: "composite"
   steps:
+    - name: Set up Python 2.7
+      uses: actions/setup-python@v4
+      with:
+        python-version: "2.7"
+
+    - name: Install pylint
+      run: |
+        python -m pip install --upgrade pip
+        pip install pylint
+      shell: bash
+
     - name: Lint ignition view.json files
       run: |
         python ${{ github.action_path }}/src/ignition_lint.py \
