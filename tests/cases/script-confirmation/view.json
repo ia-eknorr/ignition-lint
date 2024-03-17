@@ -1,0 +1,150 @@
+{
+	"custom": {},
+	"params": {},
+	"props": {},
+	"root": {
+	  "children": [
+		{
+		  "events": {
+			"component": {
+			  "onActionPerformed": {
+				"config": {
+				  "script": "\tprint(\"Hello world\")"
+				},
+				"scope": "G",
+				"type": "script"
+			  }
+			},
+			"dom": {
+			  "onClick": {
+				"config": {
+				  "script": "\tprint(\"Hello world\")"
+				},
+				"scope": "G",
+				"type": "script"
+			  }
+			}
+		  },
+		  "meta": {
+			"name": "Button"
+		  },
+		  "position": {
+			"basis": "34px"
+		  },
+		  "propConfig": {
+			"props.text": {
+			  "binding": {
+				"config": {
+				  "expression": "toStr(now(0))"
+				},
+				"transforms": [
+				  {
+					"code": "\treturn value",
+					"type": "script"
+				  }
+				],
+				"type": "expr"
+			  }
+			}
+		  },
+		  "scripts": {
+			"customMethods": [
+			  {
+				"name": "testMethod",
+				"params": [
+				  "param1",
+				  "param2"
+				],
+				"script": "\tprint(\"Hello world\")"
+			  }
+			],
+			"extensionFunctions": null,
+			"messageHandlers": [
+			  {
+				"messageType": "testMessageHandler",
+				"pageScope": true,
+				"script": "\tprint(\"Hello world\")",
+				"sessionScope": false,
+				"viewScope": false
+			  }
+			]
+		  },
+		  "type": "ia.input.button"
+		},
+		{
+		  "events": {
+			"component": {
+			  "onActionPerformed": {
+				"config": {
+				  "script": "\tprint(\"Hello world\")"
+				},
+				"scope": "G",
+				"type": "script"
+			  }
+			},
+			"dom": {
+			  "onClick": {
+				"config": {
+				  "script": "\tprint(\"Hello world\")"
+				},
+				"scope": "G",
+				"type": "script"
+			  }
+			}
+		  },
+		  "meta": {
+			"name": "Button"
+		  },
+		  "position": {
+			"basis": "34px"
+		  },
+		  "propConfig": {
+			"props.text": {
+			  "binding": {
+				"config": {
+				  "expression": "toStr(now(0))"
+				},
+				"transforms": [
+				  {
+					"code": "\treturn value",
+					"type": "script"
+				  }
+				],
+				"type": "expr"
+			  }
+			}
+		  },
+		  "scripts": {
+			"customMethods": [
+			  {
+				"name": "testMethod",
+				"params": [
+				  "param1",
+				  "param2"
+				],
+				"script": "\tprint(\"Hello world\")"
+			  }
+			],
+			"extensionFunctions": null,
+			"messageHandlers": [
+			  {
+				"messageType": "testMessageHandler",
+				"pageScope": true,
+				"script": "\tprint(\"Hello world\")",
+				"sessionScope": false,
+				"viewScope": false
+			  }
+			]
+		  },
+		  "type": "ia.input.button"
+		}
+	  ],
+	  "meta": {
+		"name": "root"
+	  },
+	  "props": {
+		"direction": "column"
+	  },
+	  "type": "ia.container.flex"
+	}
+  }
