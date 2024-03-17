@@ -27,9 +27,7 @@ runs:
   using: "composite"
   steps:
     - name: Set up Python 2.7
-      uses: actions/setup-python@v4
-      with:
-        python-version: "2.7"
+      uses: docker://python:2.7.18-buster
 
     - name: Install pylint
       run: |
