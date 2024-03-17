@@ -62,6 +62,7 @@ class StyleCheckerTests(unittest.TestCase):
         self.assertTrue(checker.is_correct_style("MyVariable123"))
         self.assertTrue(checker.is_correct_style("myVariable123"))                                                 
         self.assertTrue(checker.is_correct_style("MY_VARIABLE_123"))
+    
 
 if __name__ == "__main__":
     unittest.main()

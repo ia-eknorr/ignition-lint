@@ -4,6 +4,7 @@ import argparse
 import os
 from checker import StyleChecker
 import glob
+import re
 
 
 class JsonLinter:
@@ -29,12 +30,29 @@ class JsonLinter:
         self.component_style_rgx = component_style_rgx
         self.parameter_style_rgx = parameter_style_rgx
         self.errors = {"components": [], "parameters": []}
+        self.files_linted = 0
 
         self.component_style_checker = StyleChecker(component_style_rgx) if component_style_rgx not in [None, ""] else StyleChecker(component_style)
         self.parameter_style_checker = StyleChecker(parameter_style_rgx) if parameter_style_rgx not in [None, ""] else StyleChecker(parameter_style)
 
-    
     def lint_file(self, file_path: str) -> int:
+        # Check for presence of glob special characters
+        if re.search(r"[\*\?\[\]]", file_path):
+            # If the file_path contains a glob pattern
+            files = glob.glob(file_path, recursive=True)
+            if not files:
+                print(f"No files found matching the pattern: {file_path}")
+                return 0
+
+            num_errors = 0
+            for file in files:
+                num_errors += self.lint_single_file(file)
+            return num_errors
+        else:
+            # If the file_path is a specific file
+            return self.lint_single_file(file_path)
+
+    def lint_single_file(self, file_path: str) -> int:
         if not os.path.exists(file_path):
             print(f"File not found: {file_path}")
             return 0
@@ -49,6 +67,8 @@ class JsonLinter:
 
         self.print_errors(file_path, self.errors)
         num_errors = len(self.errors['components']) + len(self.errors['parameters'])
+
+        self.files_linted += 1
         return num_errors
 
     def check_parameter_names(self, data, errors: dict, parent_key: str = ""):
