@@ -3,3 +3,6 @@
 
 # pycache
 __pycache__
+
+# Linting temp files
+__tmp__

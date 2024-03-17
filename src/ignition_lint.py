@@ -14,9 +14,11 @@ class PythonLintException(IgnitionLintException):
     pass
 
 class PythonLinter:
-    def __init__(self, pylint_args=None):
+    def __init__(self, pylint_args=None, python_version="2.7"):
         self.pylint_args = pylint_args or []
+        self.python_version = python_version
         self.scripts_linted = 0
+        self.global_function_variables = ["self", "event"]
 
     def lint_encoded_script(self, code: str, errors: dict, parent_key: str = ""):
         # Encoded code from Ignition has some unique quirks, so we need to ignore a few things
@@ -25,16 +27,25 @@ class PythonLinter:
             "missing-docstring" # The docstring is baked into the code interface
         ]
 
+        # If there is not a __tmp__ directory, create it, and add a `.python-version` script that sets it to 2.7.18
+        if not os.path.exists("__tmp__"):
+            os.makedirs("__tmp__")
+
+            with open("__tmp__/.python-version", "w") as python_version_file:
+                python_version_file.write(self.python_version)
 
         # If _temp_script.py already exists, remove it
-        if os.path.exists("_temp_script.py"):
-            os.remove("_temp_script.py")
+        if os.path.exists("__tmp__/script.py"):
+            os.remove("__tmp__/script.py")
 
         number_of_artificially_added_lines = 0
-        with open("_temp_script.py", "w") as temp_file:
+        with open("__tmp__/script.py", "w") as temp_file:
             # NOTE: Write the ignored rules to the top of the file
             temp_file.write("# pylint: disable=" + ",".join(ignored_rules) + "\n")
             number_of_artificially_added_lines += 1
+            
+            # NOTE: Write the disable rule for any of our global function variables
+            temp_file.write("# pylint: disable=undefined-variable:" + ",".join(self.global_function_variables) + "\n")
             
             # NOTE: Add a default function definition to the top of the file
             temp_file.write("def main():\n")
@@ -43,10 +54,10 @@ class PythonLinter:
             temp_file.write(code)
 
         try:
-            # Confirm that pylint is installed and accessible
-            subprocess.run(["pylint", "--version"], stdout=subprocess.PIPE, stderr=subprocess.PIPE, check=True)
+            # Confirm that pylint is installed and accessible, but also confirm its using Ignition version 2.7
+            output = subprocess.run(["pylint", "--version"], capture_output=True, text=True).stdout
 
-            process = subprocess.run(["pylint", "_temp_script.py", "--score=no"] + self.pylint_args, capture_output=True, text=True)
+            process = subprocess.run(["pylint", f"--py-version={self.python_version}", "__tmp__/script.py", "--score=no"] + self.pylint_args, capture_output=True, text=True)
 
             output = process.stdout if process.returncode == 0 else process.stdout + process.stderr
 
@@ -61,9 +72,9 @@ class PythonLinter:
                 for line in error_lines:
                     if line != "":
                         # Replace the fake file definition
-                        line = line.replace("_temp_script.py", "")
+                        line = line.replace("__tmp__/script.py", "")
                         # Remove the pylint callout to the file
-                        line = line.replace("_temp_script, ", "")
+                        line = line.replace("__tmp__/script, ", "")
 
                         # We should remove the artificially added lines from the line number
                         written_line_number = int(line.split(":")[1])
@@ -82,7 +93,7 @@ class PythonLinter:
             print(f"PyLint Error:\n{e.output}")
         
         finally:
-            os.remove("_temp_script.py")
+            os.remove("__tmp__/script.py")
             self.scripts_linted += 1
 
 
@@ -183,7 +194,7 @@ class JsonLinter:
             if not self.component_style_checker.is_correct_style(component_name):
                 errors["components"].append(parent_key)
 
-			# NOTE: Reset our path in the json stack since we're below a component
+            # NOTE: Reset our path in the json stack since we're below a component
             current_path = None
 
         for key, value in value.items():
