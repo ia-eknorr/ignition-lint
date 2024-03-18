@@ -57,6 +57,8 @@ class JsonLinter:
             print(f"File not found: {file_path}")
             return 0
 
+        self.errors = {"components": [], "parameters": []}
+
         with open(file_path, "r") as file:
             try:
                 data = json.load(file)
