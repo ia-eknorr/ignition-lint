@@ -41,8 +41,8 @@ Regex pattern for naming convention style of components. Cannot be used with `co
 
 Regex pattern for naming convention style of parameters. Cannot be used with `parameter_style`.
 
-[!IMPORTANT]
-While the following inputs are optional, at least one input of each type is required to define the style for that type. Define naming styles for components and parameters using either predefined (*_style) or regex (*_style_rgx) conventions. For example, to define the style for components, you must use the input variable `component_style` or `component_style_rgx`, but not both.
+> [!IMPORTANT]
+> While the following inputs are optional, at least one input of each type is required to define the style for that type. Define naming styles for components and parameters using either predefined (*_style) or regex (*_style_rgx) conventions. For example, to define the style for components, you must use the input variable `component_style` or `component_style_rgx`, but not both.
 
 ## Outputs
 
