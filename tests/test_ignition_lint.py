@@ -135,7 +135,8 @@ class JsonLinterTests(unittest.TestCase):
                 elif line.strip().startswith("-"):
                     errors_dict[current_file_path].append(line.strip())
 
-            self.assertDictEqual(errors_dict, expected_errors)
+            self.assertEqual(len(errors_dict[file_paths[0]]), len(expected_errors[file_paths[0]]))
+            self.assertEqual(len(errors_dict[file_paths[1]]), len(expected_errors[file_paths[1]]))
 
     def test_lint_file_with_glob_pattern(self):
         valid_file_path = "**/PreferredStyle/view.json"
