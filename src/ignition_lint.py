@@ -22,6 +22,9 @@ class JsonLinter:
         if parameter_style_rgx is None and parameter_style is None:
             raise ValueError("Parameter naming style not specified. Use either (parameter_style) or (parameter_style_rgx).")
 
+        if parameter_style == "Title Case":
+            raise ValueError("Title Case is not a valid parameter naming style. Please use a different style.")
+
         self.parameterAreas = ["custom", "params"]
         self.componentAreas = ["root", "children"]
         self.keysToSkip = ["props", "position", "type", "meta", "propConfig", "scripts"]
