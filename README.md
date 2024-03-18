@@ -61,7 +61,7 @@ To use this Action in your workflow, create a workflow file (e.g., `.github/work
       steps:
         - uses: actions/checkout@v4
         - name: Lint files
-          uses: ia-eknorr/ignition-lint@v1.1.1
+          uses: ia-eknorr/ignition-lint@v2.0
           with:
             files: "path/to/your/view.json"
             component_style: "PascalCase"
@@ -77,7 +77,7 @@ To use this Action in your workflow, create a workflow file (e.g., `.github/work
       steps:
         - uses: actions/checkout@v4
         - name: Lint files
-          uses: ia-eknorr/ignition-lint@v1.1.1
+          uses: ia-eknorr/ignition-lint@v2.0
           with:
             files: "path/to/your/view.json"
             component_style: "^[a-z]+(-[a-z]+)*$"
