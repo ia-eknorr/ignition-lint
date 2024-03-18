@@ -4,7 +4,7 @@ author: "Eric Knorr"
 
 inputs:
   files:
-    description: "Space-separated list of ignition files to lint"
+    description: "Comma-separated list of ignition files to lint"
     required: true
   component_style:
     description: "Naming convention style for components"

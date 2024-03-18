@@ -25,6 +25,12 @@ class StyleChecker:
         return bool(re.match(r"^[A-Z0-9_]+$", name))
 
     @staticmethod
+    def is_title_case(name: str) -> bool:
+        """Check if the name follows Title Case convention."""
+        return bool(re.match(r"^[A-Z][a-z0-9]+(?:\s[A-Z][a-z0-9]+)*$", name))
+
+
+    @staticmethod
     def is_any(name: str) -> bool:
         """Any name is considered correct."""
         return True
@@ -39,6 +45,7 @@ class StyleChecker:
             "camelCase": self.is_camel_case,
             "PascalCase": self.is_pascal_case,
             "UPPER_CASE": self.is_upper_case,
+            "Title Case": self.is_title_case,
             "any": self.is_any,
         }
         if style_name in naming_styles:

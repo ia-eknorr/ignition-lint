@@ -1,14 +1,5 @@
 {
-  "custom": {
-    "CustomViewParam": "value"
-  },
-  "params": {
-    "ViewParam": "value"
-  },
   "propConfig": {
-    "custom.CustomViewParam": {
-      "persistent": true
-    },
     "params.ViewParam": {
       "paramDirection": "input",
       "persistent": true
@@ -18,11 +9,8 @@
   "root": {
     "children": [
       {
-        "custom": {
-          "ComponentCustomParam": "value"
-        },
         "meta": {
-          "name": "Icon Space Case"
+          "name": "Icon Title Case"
         },
         "position": {
           "basis": "30px"
@@ -33,9 +21,6 @@
         "type": "ia.display.icon"
       }
     ],
-    "custom": {
-      "RootCustomParam": "value"
-    },
     "meta": {
       "name": "root"
     },

@@ -22,6 +22,9 @@ class JsonLinter:
         if parameter_style_rgx is None and parameter_style is None:
             raise ValueError("Parameter naming style not specified. Use either (parameter_style) or (parameter_style_rgx).")
 
+        if parameter_style == "Title Case":
+            raise ValueError("Title Case is not a valid parameter naming style. Please use a different style.")
+
         self.parameterAreas = ["custom", "params"]
         self.componentAreas = ["root", "children"]
         self.keysToSkip = ["props", "position", "type", "meta", "propConfig", "scripts"]
@@ -128,14 +131,16 @@ class JsonLinter:
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument('--files', default="**/view.json", help='Space-separated list of ignition files or glob patterns to lint')
+    # NOTE: The comma separated list vs the space separated list is because with a Space Separated list option you cannot truly support Title Case
+    # With a Space Case formatted file, it will capture it as a separate file path
+    parser.add_argument('--files', default="**/view.json", help='Comma-separated list of ignition files or glob patterns to lint')
     parser.add_argument('--component-style', help='Naming convention style for components')
     parser.add_argument('--parameter-style', help='Naming convention style for parameters')
     parser.add_argument('--component-style-rgx', help='Regex pattern for naming convention style of components')
     parser.add_argument('--parameter-style-rgx', help='Regex pattern for naming convention style of parameters')
     args = parser.parse_args()
 
-    input_patterns = args.files.split()
+    input_patterns = args.files.split(",")
     input_files = []
     for pattern in input_patterns:
         input_files.extend(glob.glob(pattern, recursive=True))

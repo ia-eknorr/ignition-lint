@@ -147,7 +147,7 @@ class JsonLinterTests(unittest.TestCase):
 
         self.linter.lint_file(invalid_file_path)
         self.assertEqual(self.linter.files_linted, 1)
-
-
+    
+        
 if __name__ == "__main__":
     unittest.main()
