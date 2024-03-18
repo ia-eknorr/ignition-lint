@@ -41,7 +41,7 @@ jobs:
         run: 'find . -name "*.yml" | xargs yamllint'
 
   pylint:
-    name: Lint Ignition Scripts
+    name: Lint Python files
     runs-on: ubuntu-latest
     steps:
       - name: Check out code
