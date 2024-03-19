@@ -60,7 +60,7 @@ class StyleCheckerTests(unittest.TestCase):
         self.assertTrue(checker.is_correct_style("MY_VARIABLE"))
         self.assertTrue(checker.is_correct_style("my_variable_123"))
         self.assertTrue(checker.is_correct_style("MyVariable123"))
-        self.assertTrue(checker.is_correct_style("myVariable123"))                                                 
+        self.assertTrue(checker.is_correct_style("myVariable123"))
         self.assertTrue(checker.is_correct_style("MY_VARIABLE_123"))
     
 

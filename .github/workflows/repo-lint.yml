@@ -1,0 +1,59 @@
+---
+name: Precommit Check
+
+on:
+  push:
+  pull_request:
+    branches: [main]
+    types: [closed]
+  workflow_dispatch:
+
+jobs:
+  shellcheck:
+    name: Lint Shell Files
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run ShellCheck
+        uses: ludeeus/action-shellcheck@master
+
+  markdownlint:
+    name: Lint Markdown
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '19.x'
+      - name: Install dependencies
+        run: |
+          npm install -g markdownlint-cli
+      - name: Run markdownlint
+        run: 'find . -name "*.md" | xargs markdownlint'
+
+  yamllint:
+    name: Lint YAML files
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run yamllint
+        run: 'find . -name "*.yml" | xargs yamllint'
+
+  pylint:
+    name: Lint Python files
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+  
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: 3.12.2
+  
+      - name: Install dependencies
+        run: pip install pylint
+  
+      - name: Run pylint
+        run: 'python -m pylint -sn --msg-template="{path}: {line}: {msg_id}: {msg}" ./*.py'
