@@ -24,4 +24,4 @@ jobs:
         python2 -m pip install "pylint<2.0.0"
     - name: Run tests
       run: |
-        python -m unittest discover tests
+        python3 -m unittest discover tests
