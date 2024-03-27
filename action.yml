@@ -28,8 +28,9 @@ runs:
   steps:
     - name: Install pylint
       run: |
-        python -m pip install --upgrade pip > /dev/null
-        pip install pylint > /dev/null
+        curl https://bootstrap.pypa.io/pip/2.7/get-pip.py -o get-pip.py
+        sudo python2 get-pip.py
+        python2 -m pip install "pylint<2.0.0"
       shell: bash
 
     - name: Lint ignition view.json files
