@@ -103,6 +103,68 @@ class JsonLinterTests(unittest.TestCase):
 
         self.assertEqual(self.linter.errors, expected_errors)
 
+    def test_check_parameter_names_with_dataset(self):
+        data = {
+            "$": [
+                "ds",
+                192,
+                1723242356734
+            ],
+            "$columns": [
+                {
+                "name": "City",
+                "type": "String",
+                "data": [
+                    "New York",
+                    "Los Angeles",
+                    "Chicago",
+                    "Houston",
+                    "Phoenix"
+                ]
+                },
+                {
+                "name": "Population",
+                "type": "Integer",
+                "data": [
+                    8363710,
+                    3833995,
+                    2853114,
+                    2242193,
+                    1567924
+                ]
+                },
+                {
+                "name": "Timezone",
+                "type": "String",
+                "data": [
+                    "EST",
+                    "PST",
+                    "CST",
+                    "CST",
+                    "MST"
+                ]
+                },
+                {
+                "name": "GMTOffset",
+                "type": "Integer",
+                "data": [
+                    -5,
+                    -8,
+                    -6,
+                    -6,
+                    -7
+                ]
+                }
+            ]
+        }
+
+        # Should skip the $ key, yielding no errors
+        expected_errors = {"components": [], "parameters": []}
+
+        self.linter.check_parameter_names(data, self.linter.errors)
+
+        self.assertEqual(self.linter.errors, expected_errors)
+
     def test_main_with_multiple_files(self):
         file_paths = ["./tests/cases/camelCase/view.json", "./tests/cases/PascalCase/view.json"]
         expected_errors = {

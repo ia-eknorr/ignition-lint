@@ -78,6 +78,13 @@ class JsonLinter:
 
     def check_parameter_names(self, data, errors: dict, parent_key: str = ""):
         for key, value in data.items():
+            if key in self.keysToSkip:
+                continue
+            
+            # If key has the format of a dataset, skip to next key
+            if key.startswith("$"):
+                continue
+
             if isinstance(value, dict):
                 self.check_parameter_names(value, errors, f"{parent_key}.{key}")
             elif not self.parameter_style_checker.is_correct_style(key) and "props.params" not in parent_key:
