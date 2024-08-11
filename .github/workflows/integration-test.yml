@@ -13,7 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Lint json file
-        uses: ia-eknorr/ignition-lint@v2.0
+        uses: ia-eknorr/ignition-lint@v2.1
         with:
           files: tests/cases/PreferredStyle/view.json
           component_style: PascalCase
@@ -23,7 +23,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Lint json file
-        uses: ia-eknorr/ignition-lint@v2.0
+        uses: ia-eknorr/ignition-lint@v2.1
         with:
           files: tests/cases/kebab-case/view.json
           component_style: "^[a-z]+(-[a-z]+)*$"
