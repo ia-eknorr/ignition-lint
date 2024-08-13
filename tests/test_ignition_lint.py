@@ -76,12 +76,8 @@ class JsonLinterTests(unittest.TestCase):
                 }
             }
         }
-<<<<<<< HEAD
-        expected_errors = get_default_errors()
-        expected_errors['components'] = ['root/invalidChildName1']
-=======
+
         expected_errors = {"components": ["root/invalidChildName1"], "parameters": []}
->>>>>>> main
 
         self.linter.check_component_names(data, self.linter.errors)
 
@@ -215,13 +211,13 @@ class JsonLinterTests(unittest.TestCase):
 
         self.linter.lint_file(invalid_file_path)
         self.assertEqual(self.linter.files_linted, 1)
-    
+
     def test_json_encoded_script_capture(self):
         file_path = "tests/cases/script-confirmation/view.json"
-        
+
         self.linter.lint_file(file_path)
         self.assertEqual(self.linter.errors, get_default_errors())
-    
+
     def test_invalid_json_encoded_script_capture(self):
         data = {
             "meta": {"name": "root"},
@@ -246,11 +242,11 @@ class JsonLinterTests(unittest.TestCase):
                 }
             }
         }
-        
+
         errors = get_default_errors()
         self.linter.check_component_names(data, errors)
         self.assertEqual(len(errors['scripts']), 1)
-        
+
 
 if __name__ == "__main__":
     unittest.main()
