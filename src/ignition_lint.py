@@ -2,10 +2,10 @@ import json
 import sys
 import argparse
 import os
-from checker import StyleChecker
 import glob
 import re
 import subprocess
+from checker import StyleChecker
 
 class IgnitionLintException(Exception):
     pass
@@ -43,14 +43,14 @@ class PythonLinter:
             # NOTE: Write the ignored rules to the top of the file
             temp_file.write("# pylint: disable=" + ",".join(ignored_rules) + "\n")
             number_of_artificially_added_lines += 1
-            
+
             # NOTE: Write the disable rule for any of our global function variables
             temp_file.write("# pylint: disable=undefined-variable:" + ",".join(self.global_function_variables) + "\n")
-            
+
             # NOTE: Add a default function definition to the top of the file
             temp_file.write("def main():\n")
             number_of_artificially_added_lines += 1
-            
+
             temp_file.write(code)
 
         try:
@@ -65,7 +65,7 @@ class PythonLinter:
                 # If there is an output from pylint, we need to adjust the output format to account for our changes
                 # We should remove the first line, because it is just the fake file definition
                 output = "\n".join(output.split("\n")[1:])
-                
+
                 # We need to add all of the errors for this file into the errors dictionary
                 # Pylint outputs each error with newlines between, so we should split them all out
                 error_lines = output.split("\n")
@@ -91,7 +91,7 @@ class PythonLinter:
             raise PythonLintException("Pylint is not installed. Please install pylint to lint Python code.")
         except subprocess.CalledProcessError as e:
             print(f"PyLint Error:\n{e.output}")
-        
+
         finally:
             os.remove("__tmp__/script.py")
             self.scripts_linted += 1
@@ -112,12 +112,16 @@ class JsonLinter:
         if parameter_style_rgx is None and parameter_style is None:
             raise ValueError("Parameter naming style not specified. Use either (parameter_style) or (parameter_style_rgx).")
 
+        if parameter_style == "Title Case":
+            raise ValueError("Title Case is not a valid parameter naming style. Please use a different style.")
+
         try:
             self.python_linter = PythonLinter(pylint_args)
+
         except PythonLintException as e:
             print(f"Error initializing Python linter: {e}, python linting will be skipped")
             self.python_linter = None
-        
+
         self.parameterAreas = ["custom", "params"]
         self.componentAreas = ["root", "children"]
         self.keysToSkip = ["props", "position", "type", "meta", "propConfig"]
@@ -159,6 +163,8 @@ class JsonLinter:
             print(f"File not found: {file_path}")
             return 0
 
+        self.errors = {"components": [], "parameters": []}
+
         with open(file_path, "r") as file:
             try:
                 data = json.load(file)
@@ -176,6 +182,13 @@ class JsonLinter:
 
     def check_parameter_names(self, data, errors: dict, parent_key: str = ""):
         for key, value in data.items():
+            if key in self.keysToSkip:
+                continue
+
+            # If key has the format of a dataset, skip to next key
+            if key.startswith("$"):
+                continue
+
             if isinstance(value, dict):
                 self.check_parameter_names(value, errors, f"{parent_key}.{key}")
             elif not self.parameter_style_checker.is_correct_style(key) and "props.params" not in parent_key:
@@ -200,10 +213,10 @@ class JsonLinter:
         for key, value in value.items():
             # NOTE: Add our current key to the path
             current_path = key if current_path is None else f"{current_path}.{key}"
-            
+
             if key in self.keysToSkip:
                 continue
-            
+
             if key in self.script_keys:
                 self.validate_encoded_script(value, errors, f"{parent_key}")
             elif isinstance(value, dict):
@@ -219,8 +232,7 @@ class JsonLinter:
                 for index, item in enumerate(value):
                     self.check_component_names(item, errors, parent_key, current_path)
                     parent_key = parent_of_list
-        
-    
+
     def validate_encoded_script(self, script_content, errors: dict, parent_key: str = ""):
         self.python_linter.lint_encoded_script(script_content, errors, parent_key)
 

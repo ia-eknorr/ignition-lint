@@ -1,20 +1,21 @@
 import unittest
 import os
 import sys
-import os
 from unittest.mock import patch
+import glob
+from io import StringIO
 
 # Add the src directory to the PYTHONPATH
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../src')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../src")))
 
-from ignition_lint import JsonLinter
+import ignition_lint
 
 def get_default_errors():
     return {"components": [], "parameters": [], "scripts": []}
 
 class JsonLinterTests(unittest.TestCase):
     def setUp(self):
-        self.linter = JsonLinter("PascalCase", "camelCase", None, None)
+        self.linter = ignition_lint.JsonLinter("PascalCase", "camelCase", None, None)
 
     def test_lint_file_with_valid_json(self):
         file_path = "./tests/cases/PreferredStyle/view.json"
@@ -75,8 +76,12 @@ class JsonLinterTests(unittest.TestCase):
                 }
             }
         }
+<<<<<<< HEAD
         expected_errors = get_default_errors()
         expected_errors['components'] = ['root/invalidChildName1']
+=======
+        expected_errors = {"components": ["root/invalidChildName1"], "parameters": []}
+>>>>>>> main
 
         self.linter.check_component_names(data, self.linter.errors)
 
@@ -103,6 +108,103 @@ class JsonLinterTests(unittest.TestCase):
         self.linter.check_parameter_names(data, self.linter.errors)
 
         self.assertEqual(self.linter.errors, expected_errors)
+
+    def test_check_parameter_names_with_dataset(self):
+        data = {
+            "$": [
+                "ds",
+                192,
+                1723242356734
+            ],
+            "$columns": [
+                {
+                "name": "City",
+                "type": "String",
+                "data": [
+                    "New York",
+                    "Los Angeles",
+                    "Chicago",
+                    "Houston",
+                    "Phoenix"
+                ]
+                },
+                {
+                "name": "Population",
+                "type": "Integer",
+                "data": [
+                    8363710,
+                    3833995,
+                    2853114,
+                    2242193,
+                    1567924
+                ]
+                },
+                {
+                "name": "Timezone",
+                "type": "String",
+                "data": [
+                    "EST",
+                    "PST",
+                    "CST",
+                    "CST",
+                    "MST"
+                ]
+                },
+                {
+                "name": "GMTOffset",
+                "type": "Integer",
+                "data": [
+                    -5,
+                    -8,
+                    -6,
+                    -6,
+                    -7
+                ]
+                }
+            ]
+        }
+
+        # Should skip the $ key, yielding no errors
+        expected_errors = {"components": [], "parameters": []}
+
+        self.linter.check_parameter_names(data, self.linter.errors)
+
+        self.assertEqual(self.linter.errors, expected_errors)
+
+    def test_main_with_multiple_files(self):
+        file_paths = ["./tests/cases/camelCase/view.json", "./tests/cases/PascalCase/view.json"]
+        expected_errors = {
+            "./tests/cases/camelCase/view.json":
+                [
+                    "- root/iconCamelCase",
+                    "- view.custom.customViewParam",
+                    "- view.params.viewParam",
+                    "- root/iconCamelCase.custom.componentCustomParam",
+                    "- root.custom.rootCustomParam"
+                ],
+            "./tests/cases/PascalCase/view.json":
+                []
+            }
+        with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
+            with patch("sys.argv", ["ignition_lint.py", "--files"] + [",".join(file_paths)] + ["--component-style", "PascalCase", "--parameter-style", "PascalCase"]):
+                try:
+                    ignition_lint.main()
+                except SystemExit:
+                    pass
+
+                output = mock_stdout.getvalue().strip()
+                lines = output.split("\n")
+
+            errors_dict = {file_path: [] for file_path in file_paths}
+
+            for line in lines:
+                if line.startswith("Error in file: "):
+                    current_file_path = line.replace("Error in file: ", "").strip()
+                elif line.strip().startswith("-"):
+                    errors_dict[current_file_path].append(line.strip())
+
+            self.assertEqual(len(errors_dict[file_paths[0]]), len(expected_errors[file_paths[0]]))
+            self.assertEqual(len(errors_dict[file_paths[1]]), len(expected_errors[file_paths[1]]))
 
     def test_lint_file_with_glob_pattern(self):
         valid_file_path = "**/PreferredStyle/view.json"
