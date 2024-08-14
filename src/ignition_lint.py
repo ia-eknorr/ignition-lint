@@ -14,7 +14,7 @@ class PythonLintException(IgnitionLintException):
     pass
 
 class PythonLinter:
-    def __init__(self, pylint_args=None, python_version="2.7"):
+    def __init__(self, pylint_args=None, python_version="2.7.18"):
         self.pylint_args = pylint_args or []
         self.python_version = python_version
         self.scripts_linted = 0
@@ -54,10 +54,17 @@ class PythonLinter:
             temp_file.write(code)
 
         try:
+            # if pyenv is installed, switch to python 2.7.18 and run pyenv version to confirm
+            # pyenv_set = subprocess.run(["pyenv", "local", "2.7.18"], capture_output=True, text=True)
+            # pyenv_version = subprocess.run(["pyenv", "version"], capture_output=True, text=True)
             # Confirm that pylint is installed and accessible, but also confirm its using Ignition version 2.7
-            output = subprocess.run(["pylint", "--version"], capture_output=True, text=True).stdout
+            # output = subprocess.run(["pylint", "--version"], capture_output=True, text=True).stdout
+            # python_version = subprocess.run(["python2", "--version"], capture_output=True, text=True)
+            process = subprocess.run(["python2", "-c", "import pylint.lint; pylint.lint.Run(['--score=no', '__tmp__/script.py'], exit=False)"], capture_output=True, text=True)
+            # process = subprocess.run("python2 -c 'import pylint.lint; pylint.lint.Run([\"__tmp__/script.py\"])'", shell=True)
 
-            process = subprocess.run(["pylint", f"--py-version={self.python_version}", "__tmp__/script.py", "--score=no"] + self.pylint_args, capture_output=True, text=True)
+
+            # process = subprocess.run(["pylint", f"--py-version={self.python_version}", "__tmp__/script.py", "--score=no"] + self.pylint_args, capture_output=True, text=True)
 
             output = process.stdout if process.returncode == 0 else process.stdout + process.stderr
 
@@ -124,7 +131,7 @@ class JsonLinter:
 
         self.parameterAreas = ["custom", "params"]
         self.componentAreas = ["root", "children"]
-        self.keysToSkip = ["props", "position", "type", "meta", "propConfig"]
+        self.keysToSkip = ["props", "position", "type", "meta", "propConfig", "events", "extensionFunctions"]
         self.script_keys = ["script", "code"]
         self.keys_to_hide_in_output = ["children"]
         self.component_style = component_style
@@ -165,6 +172,9 @@ class JsonLinter:
 
         self.errors = {"components": [], "parameters": []}
 
+        if self.python_linter:
+            self.errors['scripts'] = []
+
         with open(file_path, "r") as file:
             try:
                 data = json.load(file)
@@ -194,12 +204,17 @@ class JsonLinter:
             elif not self.parameter_style_checker.is_correct_style(key) and "props.params" not in parent_key:
                 errors["parameters"].append(f"{parent_key}.{key}" if parent_key else key)
 
-    def check_component_names(self, value, errors: dict, parent_key: str = "", current_path: str = ""):
+    def check_component_names(self, data, errors: dict, parent_key: str = "", current_path: str = ""):
         # NOTE: If you have stepped into an array, you may hit direct strings and you should not lint these.
-        if isinstance(value, str):
+        if isinstance(data, str):
             return
 
-        component_name = value.get("meta", {}).get("name")
+        component_name = data.get("meta", {}).get("name")
+        # TODO: This is future work to handle startup scripts
+        # if component_name is None and "system" in data:
+        #     component_name = "system"
+        #     data = data.get("system")
+
         if component_name == "root":
             parent_key = component_name
         elif component_name is not None:
@@ -210,15 +225,28 @@ class JsonLinter:
             # NOTE: Reset our path in the json stack since we're below a component
             current_path = None
 
-        for key, value in value.items():
-            # NOTE: Add our current key to the path
-            current_path = key if current_path is None else f"{current_path}.{key}"
-
+        for key, value in data.items():
             if key in self.keysToSkip:
                 continue
 
-            if key in self.script_keys:
-                self.validate_encoded_script(value, errors, f"{parent_key}")
+            if isinstance(value, str):
+                continue
+
+            if isinstance(value, bool):
+                continue
+
+            if len(value) == 0:
+                continue
+
+            # NOTE: Add our current key to the path
+            if key == "name":
+                current_path = f"{parent_key}.{value}"
+            current_path = key if current_path is None else f"{current_path}.{key}"
+
+            # if key in self.script_keys:
+            #     self.validate_encoded_script(value, errors, f"{parent_key}")
+            if key == "scripts":
+                self.walk_scripts(value, errors, f"{parent_key}.{key}")
             elif isinstance(value, dict):
                 if key in self.parameterAreas:
                     if not parent_key:
@@ -232,6 +260,24 @@ class JsonLinter:
                 for index, item in enumerate(value):
                     self.check_component_names(item, errors, parent_key, current_path)
                     parent_key = parent_of_list
+
+    def walk_scripts(self, data, errors: dict, parent_key: str = ""):
+        if isinstance(data, dict):
+            for key, value in data.items():
+                if key in ["name", "params"]:
+                    continue
+
+                current_key = f"{parent_key}.{key}" if parent_key else key
+
+                if key in self.script_keys:
+                    self.validate_encoded_script(value, errors, current_key)
+                elif isinstance(value, (dict, list)):
+                    self.walk_scripts(value, errors, current_key)
+
+        elif isinstance(data, list):
+            for item in data:
+                current_key = f"{parent_key}.{item["name"]}"
+                self.walk_scripts(item, errors, current_key)
 
     def validate_encoded_script(self, script_content, errors: dict, parent_key: str = ""):
         self.python_linter.lint_encoded_script(script_content, errors, parent_key)
