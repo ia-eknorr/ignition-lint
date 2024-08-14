@@ -60,7 +60,7 @@ class PythonLinter:
             # Confirm that pylint is installed and accessible, but also confirm its using Ignition version 2.7
             # output = subprocess.run(["pylint", "--version"], capture_output=True, text=True).stdout
             # python_version = subprocess.run(["python2", "--version"], capture_output=True, text=True)
-            process = subprocess.run(["python2", "-c", "import pylint.lint; pylint.lint.Run(['--score=no', '__tmp__/script.py'], exit=False)"], capture_output=True, text=True)
+            process = subprocess.run(["python3", "-c", "import pylint.lint; pylint.lint.Run(['--score=no', '__tmp__/script.py'], exit=False)"], capture_output=True, text=True)
             # process = subprocess.run("python2 -c 'import pylint.lint; pylint.lint.Run([\"__tmp__/script.py\"])'", shell=True)
 
 
@@ -264,7 +264,9 @@ class JsonLinter:
     def walk_scripts(self, data, errors: dict, parent_key: str = ""):
         if isinstance(data, dict):
             for key, value in data.items():
-                if key in ["name", "params"]:
+                if key in ["name", "params", "extensionFunctions", "messageType"]:
+                    continue
+                if isinstance(value, bool):
                     continue
 
                 current_key = f"{parent_key}.{key}" if parent_key else key
@@ -276,7 +278,8 @@ class JsonLinter:
 
         elif isinstance(data, list):
             for item in data:
-                current_key = f"{parent_key}.{item["name"]}"
+                item_name = item["messageType"] if "messageType" in item else item["name"]
+                current_key = f"{parent_key}.{item_name}"
                 self.walk_scripts(item, errors, current_key)
 
     def validate_encoded_script(self, script_content, errors: dict, parent_key: str = ""):
