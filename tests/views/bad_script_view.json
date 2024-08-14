@@ -1,0 +1,57 @@
+{
+  "custom": {},
+  "events": {
+    "system": {
+      "onStartup": {
+        "config": {
+          "script": "\tprint \"this is a onStartup script\""
+        },
+        "scope": "G",
+        "type": "script"
+      }
+    }
+  },
+  "params": {},
+  "props": {},
+  "root": {
+    "meta": {
+      "name": "root"
+    },
+    "propConfig": {
+      "custom.testScript": {
+        "binding": {
+          "config": {
+            "expression": "now(5000)"
+          },
+          "transforms": [
+            {
+              "code": "\treturn some_function()\n\n# Importing an unused module\nimport math\n\n# Function with too many arguments\ndef example_function(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10):\n\t\"\"\"\n\tFunction with too many arguments\n\t\"\"\"\n\treturn arg1 + arg2 + arg3 + arg4 + arg5 + arg6 + arg7 + arg8 + arg9 + arg10\n\n# Variable name is too short\nx \u003d 1\n\n# Unused variable\nunused_var \u003d 42\n\n# Undefined variable\ndef some_function():\n\tprint undeclared_var\n\n# Missing module-level docstring\ndef another_function(param):\n\treturn param\n\n# Function with too many lines (considered a bad practice in PEP8)\ndef large_function():\n\t# This function does too much work\n\tresult \u003d 0\n\tfor i in range(100):\n\t\tresult +\u003d i\n\treturn result\n\n# Missing return statement\ndef no_return_value(a, b):\n\ta + b\n\n# Deprecated function usage\ndef deprecated_usage():\n\t# `basestring` is deprecated in Python 3\n\tif isinstance(\"some_string\", basestring):\n\t\tprint \"This is a string\"\n\n",
+              "type": "script"
+            }
+          ],
+          "type": "expr"
+        }
+      }
+    },
+    "scripts": {
+      "customMethods": [
+        {
+          "name": "newMethod",
+          "params": [],
+          "script": "\tprint \"this is a new method\""
+        }
+      ],
+      "extensionFunctions": null,
+      "messageHandlers": [
+        {
+          "messageType": "code-message-handler",
+          "pageScope": true,
+          "script": "\tprint \"this is a message handler\"",
+          "sessionScope": false,
+          "viewScope": false
+        }
+      ]
+    },
+    "type": "ia.container.coord"
+  }
+}
