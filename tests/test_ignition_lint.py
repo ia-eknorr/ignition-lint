@@ -180,7 +180,7 @@ class JsonLinterTests(unittest.TestCase):
                 []
             }
         with patch("sys.stdout", new_callable=StringIO) as mock_stdout:
-            with patch("sys.argv", ["ignition_lint.py", "--files"] + [",".join(file_paths)] + ["--component-style", "PascalCase", "--parameter-style", "PascalCase"]):
+            with patch("sys.argv", ["ignition_lint.py", "--files"] + [" ".join(file_paths)] + ["--component-style", "PascalCase", "--parameter-style", "PascalCase"]): 
                 try:
                     ignition_lint.main()
                 except SystemExit:
