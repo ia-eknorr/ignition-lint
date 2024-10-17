@@ -18,6 +18,10 @@ inputs:
   parameter_style_rgx:
     description: "Regex pattern for naming convention style of parameters"
     required: false
+  allow_acronyms:
+    description: "Allow acronyms in component and parameter names"
+    required: false
+    default: "false"
 
 branding:
   icon: "zap"
@@ -34,6 +38,7 @@ runs:
           --parameter-style "${{ inputs.parameter_style }}" \
           --component-style-rgx "${{ inputs.component_style_rgx }}" \
           --parameter-style-rgx "${{ inputs.parameter_style_rgx }}"
+          --allow-acronyms "${{ inputs.allow_acronyms }}"
       shell: bash
       env:
         INPUT_FILES: ${{ inputs.files }}
@@ -41,3 +46,4 @@ runs:
         INPUT_PARAMETER_STYLE: ${{ inputs.parameter_style }}
         INPUT_COMPONENT_STYLE_RGX: ${{ inputs.component_style_rgx }}
         INPUT_PARAMETER_STYLE_RGX: ${{ inputs.parameter_style_rgx }}
+        INPUT_ALLOW_ACRONYMS: ${{ inputs.allow_acronyms }}
