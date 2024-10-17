@@ -1,0 +1,26 @@
+---
+repos:
+  - repo: https://github.com/markdownlint/markdownlint
+    rev: v0.12.0
+    hooks:
+      - id: markdownlint
+        name: Markdown Lint
+        entry: markdownlint
+        language: system
+        args:
+          - "--config=.markdownlint.json"
+          - "--ignore-path=.markdownlintignore"
+        types: [markdown]
+
+  - repo: https://github.com/pre-commit/mirrors-pylint
+    rev: v1.9.1
+    hooks:
+      - id: pylint
+        name: pylint
+        entry: pylint
+        language: system
+        args:
+          - "--rcfile=.pylintrc"
+          - "--msg-template='{path}:\n  Line {line}: {msg_id}: {msg}'"
+        # files: \*.py$
+        types: [python]
