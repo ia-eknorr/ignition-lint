@@ -44,6 +44,15 @@ Regex pattern for naming convention style of parameters. Cannot be used with `pa
 > [!IMPORTANT]
 > While the following inputs are optional, at least one input of each type is required to define the style for that type. Define naming styles for components and parameters using either predefined (*_style) or regex (*_style_rgx) conventions. For example, to define the style for components, you must use the input variable `component_style` or `component_style_rgx`, but not both.
 
+### `allow_acronyms` (optional)
+
+Boolean value to allow acronyms in component and parameter names. The default value is `false`.
+
+This input is useful when using `camelCase`, `PascalCase` or `Title Case` styles, where acronyms are typically written in uppercase. When set to `true`, acronyms are allowed in component and parameter names. When set to `false`, acronyms are not allowed in component and parameter names.
+
+> [!CAUTION]
+> This input can have unexpected results, since it allows things that are not *actually* in the pattern. For instance, if you have specified `camelCase` and `allow_acronyms` is `true`, the pattern will allow `URL`, `USPopulation`, and `myGPSLocation` as valid names, even though they are not camelCase. There are all sorts of edge cases like this, so be careful when using this input.
+
 ## Outputs
 
 None
@@ -61,7 +70,7 @@ To use this Action in your workflow, create a workflow file (e.g., `.github/work
       steps:
         - uses: actions/checkout@v4
         - name: Lint files
-          uses: ia-eknorr/ignition-lint@v2.0
+          uses: ia-eknorr/ignition-lint@v2.2
           with:
             files: "path/to/your/view.json"
             component_style: "PascalCase"
@@ -77,7 +86,7 @@ To use this Action in your workflow, create a workflow file (e.g., `.github/work
       steps:
         - uses: actions/checkout@v4
         - name: Lint files
-          uses: ia-eknorr/ignition-lint@v2.0
+          uses: ia-eknorr/ignition-lint@v2.2
           with:
             files: "path/to/your/view.json"
             component_style: "^[a-z]+(-[a-z]+)*$"
@@ -87,9 +96,9 @@ To use this Action in your workflow, create a workflow file (e.g., `.github/work
 ### Action scenarios
 
 * No style conflicts
-  * The check will pass
+  * The action will pass
 * No files given
-  * The test will pass
+  * The action will pass
 * Style conflicts are found
   * The action will fail with logs showing the bad names
   ![test-failure](images/test-failure.png)
