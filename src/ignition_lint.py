@@ -193,20 +193,20 @@ class JsonLinter:
             if not self.component_style_checker.is_correct_style(component_name):
                 errors["components"].append(parent_key)
 
-        for key, value in value.items():
+        for key, element in value.items():
             if key in self.keys_to_skip:
                 continue
 
-            if isinstance(value, dict):
+            if isinstance(element, dict):
                 if key in self.parameter_areas:
                     if not parent_key:
                         parent_key = "view"
-                    self.check_parameter_names(value, errors, f"{parent_key}.{key}")
+                    self.check_parameter_names(element, errors, f"{parent_key}.{key}")
                 else:
-                    self.check_component_names(value, errors, parent_key)
-            elif isinstance(value, list):
+                    self.check_component_names(element, errors, parent_key)
+            elif isinstance(element, list):
                 parent_of_list = parent_key
-                for item in value:
+                for item in element:
                     self.check_component_names(item, errors, parent_key)
                     parent_key = parent_of_list
 
