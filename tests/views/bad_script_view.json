@@ -1,32 +1,94 @@
 {
-  "custom": {},
+  "custom": {
+    "bad_view_custom": "asdf",
+    "goodViewCustom": "qwer"
+  },
   "events": {
     "system": {
-      "onStartup": {
-        "config": {
-          "script": "\tprint \"this is a onStartup script\""
+      "onStartup": [
+        {
+          "config": {
+            "script": "\tgoodVariable \u003d 1\n\tPoor_stylisticCHOICE \u003d 2\n\t\n\treturn undefinedVariable"
+          },
+          "scope": "G",
+          "type": "script"
         },
-        "scope": "G",
-        "type": "script"
-      }
+        {
+          "config": {
+            "script": "\tsecondScriptVar \u003d 22\n\tOopsyFormatting \u003d 33\n\t\n\treturn secondScriptVar + OopsyFormatting"
+          },
+          "scope": "G",
+          "type": "script"
+        }
+      ]
     }
   },
-  "params": {},
+  "params": {
+    "badViewPARAM": "foo",
+    "goodViewParam": "bar"
+  },
+  "propConfig": {
+    "custom.bad_view_custom": {
+      "persistent": true
+    },
+    "custom.goodViewCustom": {
+      "persistent": true
+    },
+    "params.badViewPARAM": {
+      "paramDirection": "input",
+      "persistent": true
+    },
+    "params.goodViewParam": {
+      "paramDirection": "input",
+      "persistent": true
+    }
+  },
   "props": {},
   "root": {
+    "events": {
+      "dom": {
+        "onClick": [
+          {
+            "config": {
+              "logLevel": "info",
+              "remoteLoggingEnabled": false
+            },
+            "scope": "C",
+            "type": "alter-logging"
+          },
+          {
+            "config": {
+              "script": "\t# Wow, lots happening on this onClick event\n\t# But comments are cool, we like comments\n\n\tdef addThese(num1, num2):\n\t\treturn num1 * num2\n\t\n\treturn addThese(17, 40)"
+            },
+            "scope": "G",
+            "type": "script"
+          },
+          {
+            "config": {},
+            "scope": "C",
+            "type": "refresh"
+          }
+        ]
+      }
+    },
     "meta": {
       "name": "root"
     },
     "propConfig": {
-      "custom.testScript": {
+      "custom.testTransforms": {
         "binding": {
           "config": {
             "expression": "now(5000)"
           },
           "transforms": [
             {
-              "code": "\treturn some_function()\n\n# Importing an unused module\nimport math\n\n# Function with too many arguments\ndef example_function(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10):\n\t\"\"\"\n\tFunction with too many arguments\n\t\"\"\"\n\treturn arg1 + arg2 + arg3 + arg4 + arg5 + arg6 + arg7 + arg8 + arg9 + arg10\n\n# Variable name is too short\nx \u003d 1\n\n# Unused variable\nunused_var \u003d 42\n\n# Undefined variable\ndef some_function():\n\tprint undeclared_var\n\n# Missing module-level docstring\ndef another_function(param):\n\treturn param\n\n# Function with too many lines (considered a bad practice in PEP8)\ndef large_function():\n\t# This function does too much work\n\tresult \u003d 0\n\tfor i in range(100):\n\t\tresult +\u003d i\n\treturn result\n\n# Missing return statement\ndef no_return_value(a, b):\n\ta + b\n\n# Deprecated function usage\ndef deprecated_usage():\n\t# `basestring` is deprecated in Python 3\n\tif isinstance(\"some_string\", basestring):\n\t\tprint \"This is a string\"\n\n",
+              "code": "\treturn another_function(10)\n\n# Importing an unused module\nimport math\n\n# Function with too many arguments\ndef example_function(arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10):\n\t\"\"\"\n\tFunction with too many arguments\n\t\"\"\"\n\treturn arg1 + arg2 + arg3 + arg4 + arg5 + arg6 + arg7 + arg8 + arg9 + arg10\n\n# Variable name is too short\nx \u003d 1\n\n# Unused variable\nunused_var \u003d 42\n\n# Undefined variable\ndef some_function():\n\tprint undeclared_var\n\n# Missing module-level docstring\ndef another_function(param):\n\treturn param\n\n# Function with too many lines (considered a bad practice in PEP8)\ndef large_function():\n\t# This function does too much work\n\tresult \u003d 0\n\tfor i in range(100):\n\t\tresult +\u003d i\n\treturn result\n\n# Missing return statement\ndef no_return_value(a, b):\n\ta + b\n",
               "type": "script"
+            },
+            {
+              "formatType": "numeric",
+              "formatValue": "currency",
+              "type": "format"
             }
           ],
           "type": "expr"
@@ -36,9 +98,9 @@
     "scripts": {
       "customMethods": [
         {
-          "name": "newMethod",
+          "name": "myMethod",
           "params": [],
-          "script": "\tprint \"this is a new method\""
+          "script": "\tvar1 \u003d 10\n\tvar2 \u003d 20\n\tVar_so_BAD \u003d 30\n\treturn \"%s times and counting...\" % Var_so_BAD"
         }
       ],
       "extensionFunctions": null,
@@ -46,7 +108,7 @@
         {
           "messageType": "code-message-handler",
           "pageScope": true,
-          "script": "\tprint \"this is a message handler\"",
+          "script": "\tdef NOT_FINISHED():\n\t# Not finished\n\tprint \"this is a message handler\"",
           "sessionScope": false,
           "viewScope": false
         }
