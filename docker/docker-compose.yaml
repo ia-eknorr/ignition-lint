@@ -1,7 +1,7 @@
 services:
   # Ignition Gateway Service
   ignition:
-    image: bwdesigngroup/ignition-docker:8.1.44
+    image: bwdesigngroup/ignition-docker:8.1.52
     platform: linux/amd64
     environment:
       GATEWAY_MODULES_ENABLED: perspective,web-developer
