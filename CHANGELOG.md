@@ -8,12 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Docusaurus 3 documentation site under `documentation/`, published to GitHub Pages at https://bw-design-group.github.io/ignition-lint on push to `main`. Covers tutorial, per-rule user guides, full per-rule technical references with per-option breakdowns, usage (CLI, pre-commit, GitHub Actions, whitelist, debug output), developer guide (architecture, creating rules, API reference, testing, troubleshooting), and a changelog mirror auto-copied from this file. [094f971]
+- `.github/workflows/deploy-docs.yml` — builds the docs site and deploys to GitHub Pages on push to `main` (path-filtered to `documentation/**` and `CHANGELOG.md`) or via `workflow_dispatch`. [094f971]
 - Auto-fix for trailing whitespace (C0303) in PylintScriptRule via `--fix` flag [d775d45]
 - PylintScriptRule now uses FixableMixin so the existing fix infrastructure discovers it automatically [d775d45]
 - Unit tests covering the registry contract: every registered rule must instantiate from `{}`, registration is idempotent, metadata is computed lazily [9342e8d]
 - `--verbose` now prints a per-rule breakdown showing each rule's source (config path or "defaults") plus disabled / errored rules [9342e8d]
 
 ### Changed
+- README rewritten as a 53-line landing page that hands off to the published docs (was a 1170-line monolithic doc that duplicated content now living in the docs site). [094f971]
 - **Opinionated by default**: every registered rule now runs unless explicitly disabled. Previously the user's config acted as an allowlist (only listed rules ran); now the config is an override layer — rules absent from the config run with default kwargs, and `enabled: false` is the way to opt out. Configs that already list every rule (including the bundled `rule_config.json`) behave identically. Configs that listed only a subset of rules will start producing additional violations from the rules they previously omitted. [9342e8d]
 - Registry no longer instantiates rules at registration time. Validation is now static-only (`issubclass(LintingRule)`, has `error_message`, has `create_from_config`); the empty-config smoke test moved to the test suite. [9342e8d]
 - Registering the same rule class under the same name is now a silent no-op. The misleading `"Skipped invalid rule … is already registered"` warnings at startup are gone. [9342e8d]
