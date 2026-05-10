@@ -561,7 +561,7 @@ class MyCustomRule(LintingRule):
 - **Having Issues?** → [Troubleshooting Guide](docs/troubleshooting-rule-development.md)
 
 **Additional Resources:**
-- **Example Rules**: `src/ignition_lint/rules/example_rule.py` - Working examples
+- **Example Rules**: `src/ignition_lint/rules/_examples/example_rule.py` - Working examples (excluded from auto-discovery; import explicitly when using)
 - **Rule Registry API**: Automatic discovery, validation, and registration system
 - **Testing Framework**: Built-in test utilities for rule validation
 

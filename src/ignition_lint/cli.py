@@ -174,10 +174,6 @@ def cleanup_old_batch_files(output_path: Path) -> None:
 	# Check batch files (e.g., results_pid*_batch*.txt)
 	pattern = f"{base_name}*batch*.txt"
 	for file_path in output_path.parent.glob(pattern):
-		# Skip aggregated summary files
-		if 'AGGREGATED_SUMMARY' in file_path.name:
-			continue
-
 		# Extract PID from filename (e.g., results_pid12345_batch1.txt)
 		if f'_pid{current_pid}_' in file_path.name:
 			# Same PID as current run - skip
@@ -195,6 +191,19 @@ def cleanup_old_batch_files(output_path: Path) -> None:
 
 		# Old batch file from previous run - mark for deletion
 		files_to_clean.append(file_path)
+
+	# Check aggregated summary file (e.g., results_AGGREGATED_SUMMARY.txt)
+	# These have no PID in the name, so age-based check only.
+	# Stale summaries pollute new runs by reporting old totals (see
+	# aggregate_batch_results: it reads an existing summary for non-batch paths).
+	summary_file = output_path.parent / f"{base_name}_AGGREGATED_SUMMARY.txt"
+	if summary_file.exists():
+		try:
+			file_age = current_time - summary_file.stat().st_mtime
+			if file_age >= 5:
+				files_to_clean.append(summary_file)
+		except OSError:
+			pass
 
 	# Clean up old files
 	if files_to_clean:
@@ -238,14 +247,20 @@ def make_unique_output_path(original_path: Path) -> Path:
 		batch_num += 1
 
 
-def load_config(config_path: str) -> dict:
-	"""Load configuration from a JSON file."""
+def load_config(config_path: str) -> Optional[dict]:
+	"""
+	Load configuration from a JSON file.
+
+	Returns the parsed dict on success (which may legitimately be empty when
+	the user wants to run all rules with default kwargs), or None if the file
+	cannot be read or parsed.
+	"""
 	try:
 		with open(config_path, 'r', encoding='utf-8') as f:
 			return json.load(f)
 	except (FileNotFoundError, json.JSONDecodeError) as e:
 		print(f"Error loading config file {config_path}: {e}")
-		return {}
+		return None
 
 
 def load_whitelist(whitelist_path: str) -> set:
@@ -375,37 +390,100 @@ def generate_whitelist(patterns: List[str], output_file: str, append: bool = Fal
 		sys.exit(1)
 
 
-def create_rules_from_config(config: dict) -> list:
+def create_rules_from_config(config: dict) -> tuple:
 	"""
-	Create rule instances from config dictionary using self-processing rules.
+	Create rule instances for every registered rule.
+
+	All registered rules run by default. The user's config provides per-rule
+	overrides: `kwargs` to customize behavior, or `enabled: false` to opt out.
+	Rules absent from the config run with default kwargs.
 
 	Args:
-		config: Configuration dictionary from config file
+		config: Configuration dictionary from config file (may be empty)
+
+	Returns:
+		Tuple of (rules, statuses):
+			rules    -- list of instantiated LintingRule objects
+			statuses -- list of dicts describing every registered rule, one per
+						rule, with keys:
+						  name   : rule class name
+						  state  : "loaded" | "disabled" | "error"
+						  source : "config" if user supplied kwargs, else "defaults"
+						  detail : optional error/skip detail (str or None)
 	"""
-	rules = []
+	# Always-on warning for config keys that don't resolve to a known rule.
 	for rule_name, rule_config in config.items():
-		# Skip private keys or invalid configurations
 		if rule_name.startswith("_") or not isinstance(rule_config, dict):
 			continue
+		if rule_name not in RULES_MAP:
+			print(f"Unknown rule in config: {rule_name}")
+
+	rules = []
+	statuses = []
+	for rule_name, rule_class in RULES_MAP.items():
+		rule_config = config.get(rule_name, {})
+		if not isinstance(rule_config, dict):
+			rule_config = {}
+
+		has_user_kwargs = bool(rule_config.get('kwargs'))
+		source = "config" if (rule_name in config or has_user_kwargs) else "defaults"
 
 		if not rule_config.get('enabled', True):
-			print(f"Skipping rule {rule_name} (config['enabled'] == False)")
+			statuses.append({
+				"name": rule_name,
+				"state": "disabled",
+				"source": source,
+				"detail": "enabled=false",
+			})
 			continue
 
-		if rule_name not in RULES_MAP:
-			print(f"Unknown rule: {rule_name}")
-			continue
-
-		rule_class = RULES_MAP[rule_name]
 		kwargs = rule_config.get('kwargs', {})
 
 		try:
 			rules.append(rule_class.create_from_config(kwargs))
+			statuses.append({
+				"name": rule_name,
+				"state": "loaded",
+				"source": source,
+				"detail": None,
+			})
 		except (TypeError, ValueError, AttributeError) as e:
 			print(f"Error creating rule {rule_name}: {e}")
+			statuses.append({
+				"name": rule_name,
+				"state": "error",
+				"source": source,
+				"detail": str(e),
+			})
 			continue
 
-	return rules
+	return rules, statuses
+
+
+def _print_rule_breakdown(statuses: list, config_path: str) -> None:
+	"""
+	Print a per-rule breakdown showing each registered rule's source.
+
+	Called from setup_linter() under --verbose. Loaded rules are shown with
+	their kwargs source (the config file or "defaults"); disabled rules are
+	shown with the reason; rules that failed to instantiate are shown with
+	the error.
+	"""
+	loaded = [s for s in statuses if s["state"] == "loaded"]
+	disabled = [s for s in statuses if s["state"] == "disabled"]
+	errored = [s for s in statuses if s["state"] == "error"]
+
+	name_width = max((len(s["name"]) for s in statuses), default=0)
+	print(f"✅ Loaded {len(loaded)} rules:")
+	for status in loaded:
+		source = f"config: {config_path}" if status["source"] == "config" else "defaults"
+		print(f"  • {status['name']:<{name_width}}  ({source})")
+
+	for status in disabled:
+		print(f"  ⊘ {status['name']:<{name_width}}  (skipped: {status['detail']})")
+
+	for status in errored:
+		print(f"  ✗ {status['name']:<{name_width}}  (error: {status['detail']})")
 
 
 def get_view_file(file_path: Path) -> Dict[str, Any]:
@@ -620,12 +698,12 @@ def setup_linter(args) -> LintEngine:
 		lint_engine = LintEngine([], debug_output_dir=args.debug_output)
 	else:
 		config = load_config(args.config)
-		if not config:
+		if config is None:
 			print("❌ No valid configuration found")
 			sys.exit(1)
 
 		print(f"🔧 Loaded configuration from {args.config}")
-		rules = create_rules_from_config(config)
+		rules, rule_statuses = create_rules_from_config(config)
 		if not rules:
 			print("❌ No valid rules configured")
 			sys.exit(1)
@@ -633,7 +711,7 @@ def setup_linter(args) -> LintEngine:
 		lint_engine = LintEngine(rules, debug_output_dir=args.debug_output)
 
 		if args.verbose:
-			print(f"✅ Loaded {len(rules)} rules: {[rule.__class__.__name__ for rule in rules]}")
+			_print_rule_breakdown(rule_statuses, args.config)
 
 	# Inform about debug output
 	if args.debug_output:
@@ -961,35 +1039,10 @@ def aggregate_batch_results(results_path: Path) -> Optional[Dict[str, int]]:
 	else:
 		base_name = results_path.stem
 
-	# Check if this is a batched result (has _pid and _batch in name)
+	# Only aggregate when this invocation produced a batch file (has _pid and _batch).
+	# A non-batch path means this is a standalone or first-batch run; its own totals
+	# are already correct and the caller no longer overrides them from the summary.
 	is_batch_file = '_pid' in results_path.name and '_batch' in results_path.name
-
-	# If not a batch file, check for existing aggregated summary
-	summary_path = parent_dir / f"{base_name}_AGGREGATED_SUMMARY.txt"
-	if not is_batch_file and summary_path.exists():
-		# Read and return totals from existing aggregated summary
-		# (Only for non-batch files like results.txt)
-		try:
-			with open(summary_path, 'r', encoding='utf-8') as f:
-				content = f.read()
-				files_match = re.search(r'Files processed:\s+(\d+)', content)
-				warnings_match = re.search(r'Total warnings:\s+(\d+)', content)
-				errors_match = re.search(r'Total errors:\s+(\d+)', content)
-				issues_match = re.search(r'Files with issues:\s+(\d+)', content)
-				clean_match = re.search(r'Clean files:\s+(\d+)', content)
-
-				if files_match:
-					return {
-						'files': int(files_match.group(1)),
-						'warnings': int(warnings_match.group(1)) if warnings_match else 0,
-						'errors': int(errors_match.group(1)) if errors_match else 0,
-						'issues': int(issues_match.group(1)) if issues_match else 0,
-						'clean': int(clean_match.group(1)) if clean_match else 0,
-					}
-		except (OSError, IOError):
-			pass  # If we can't read it, fall through to aggregation logic
-
-	# If not a batch file, no aggregation needed
 	if not is_batch_file:
 		return None
 
@@ -1481,15 +1534,11 @@ def main():
 		)
 		print("\n" + f"📝 Results written to: {results_path}")
 
-		# Aggregate batch results if multiple batches exist
-		aggregated_totals = aggregate_batch_results(results_path)
-
-		# Use aggregated totals for final summary if available
-		if aggregated_totals:
-			total_warnings = aggregated_totals['warnings']
-			total_errors = aggregated_totals['errors']
-			processed_files = aggregated_totals['files']
-			files_with_issues = aggregated_totals['issues']
+		# Write _AGGREGATED_SUMMARY.txt across batch files (CI/disk artifact only).
+		# Each invocation prints its own honest totals; we no longer override the
+		# terminal summary with aggregated values, since pre-commit runs N separate
+		# processes and the escalating per-batch overrides were confusing.
+		aggregate_batch_results(results_path)
 
 	# Print final summary
 	print_final_summary(
