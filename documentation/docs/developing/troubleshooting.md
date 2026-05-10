@@ -136,7 +136,7 @@ Three common causes:
 1. **`target_node_types` doesn't include the relevant type.** Check `super().__init__(...)` in your rule.
 2. **You're targeting the wrong node type.** A property binding is `NodeType.PROPERTY_BINDING`, not `NodeType.PROPERTY`. Use `--debug-nodes <type>` to see what nodes actually exist:
    ```bash
-   ignition-lint --files path/to/view.json --debug-nodes property_binding
+   ign-lint --files path/to/view.json --debug-nodes property_binding
    ```
 3. **Method name typo.** `visit_property_binding`, not `visit_propertybinding`. The framework dispatches on exact method names — see [Architecture — Visit methods](./architecture.md#visit-methods) for the canonical list.
 
@@ -169,7 +169,7 @@ Common causes and fixes:
 Use `--analyze-rules` to see which rule dominates runtime:
 
 ```bash
-ignition-lint --config rule_config.json --files "**/view.json" --analyze-rules
+ign-lint --config rule_config.json --files "**/view.json" --analyze-rules
 ```
 
 ## Tests
@@ -319,10 +319,10 @@ def visit_component(self, node):
 
 ```bash
 # Every component node in a view
-ignition-lint --files path/to/view.json --debug-nodes component
+ign-lint --files path/to/view.json --debug-nodes component
 
 # Multiple node types
-ignition-lint --files path/to/view.json --debug-nodes expression_binding property
+ign-lint --files path/to/view.json --debug-nodes expression_binding property
 ```
 
 ### Generate model dump

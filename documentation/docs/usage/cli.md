@@ -6,31 +6,31 @@ description: Full CLI reference for ignition-lint
 
 # Command line
 
-Complete reference for the `ignition-lint` CLI. The CLI is the primary interface — every other integration (pre-commit, GitHub Actions, custom scripts) wraps it.
+Complete reference for the `ign-lint` CLI. The CLI is the primary interface — every other integration (pre-commit, GitHub Actions, custom scripts) wraps it.
 
 ## Synopsis
 
 ```bash
-ignition-lint [<files>...] [--files <pattern>...] [options]
+ign-lint [<files>...] [--files <pattern>...] [options]
 ```
 
 ## Common invocations
 
 ```bash
 # Single file
-ignition-lint path/to/view.json
+ign-lint path/to/view.json
 
 # Glob pattern (quote it!)
-ignition-lint --files "**/view.json"
+ign-lint --files "**/view.json"
 
 # Multiple patterns
-ignition-lint --files "views/**/view.json" --files "components/**/view.json"
+ign-lint --files "views/**/view.json" --files "components/**/view.json"
 
 # With config
-ignition-lint --config rule_config.json --files "**/view.json"
+ign-lint --config rule_config.json --files "**/view.json"
 
 # Verbose, with timing
-ignition-lint --config rule_config.json --files "**/view.json" --verbose
+ign-lint --config rule_config.json --files "**/view.json" --verbose
 ```
 
 ## Options
@@ -110,10 +110,10 @@ Each violation includes the JSON path inside the view, the rule name, the severi
 
 ```bash
 # Right
-ignition-lint --files "**/view.json"
+ign-lint --files "**/view.json"
 
 # Wrong (shell expands first; long arg lists may exceed ARG_MAX)
-ignition-lint --files **/view.json
+ign-lint --files **/view.json
 ```
 
 For very large repositories (hundreds of view files), use the CLI's globbing rather than shelling out `find ... -exec`. Some pre-commit configurations pass every matched file as an arg, which can exceed system `ARG_MAX` limits — the CLI's internal globbing avoids this.
@@ -127,7 +127,7 @@ For very large repositories (hundreds of view files), use the CLI's globbing rat
 - Profiling model-build performance separately from rule execution
 
 ```bash
-ignition-lint --files "**/view.json" --stats-only --verbose
+ign-lint --files "**/view.json" --stats-only --verbose
 ```
 
 ## Rule analysis mode
@@ -139,7 +139,7 @@ ignition-lint --files "**/view.json" --stats-only --verbose
 - Auditing CI cost — which rules dominate runtime?
 
 ```bash
-ignition-lint --config rule_config.json --files "**/view.json" --analyze-rules
+ign-lint --config rule_config.json --files "**/view.json" --analyze-rules
 ```
 
 ## Debug-nodes mode
@@ -147,7 +147,7 @@ ignition-lint --config rule_config.json --files "**/view.json" --analyze-rules
 `--debug-nodes` dumps every node of the given type(s) the framework discovered:
 
 ```bash
-ignition-lint --files path/to/view.json --debug-nodes component expression_binding
+ign-lint --files path/to/view.json --debug-nodes component expression_binding
 ```
 
 Useful when developing a rule — see exactly what your visit method will receive.
@@ -157,7 +157,7 @@ Useful when developing a rule — see exactly what your visit method will receiv
 Modes compose. A representative debugging session:
 
 ```bash
-ignition-lint \
+ign-lint \
   --config rule_config.json \
   --files "views/Dashboard/view.json" \
   --verbose \

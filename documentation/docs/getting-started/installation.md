@@ -16,13 +16,13 @@ Two install paths: install the published package for use, or set up a Poetry wor
 ## Install from PyPI (recommended)
 
 ```bash
-pip install ignition-lint
+pip install ign-lint
 ```
 
 Verify:
 
 ```bash
-ignition-lint --help
+ign-lint --help
 ```
 
 ## Development setup with Poetry
@@ -30,7 +30,7 @@ ignition-lint --help
 Use this path if you're contributing to the framework or writing custom rules against the source.
 
 ```bash
-git clone https://github.com/design-group/ignition-lint.git
+git clone https://github.com/bw-design-group/ignition-lint.git
 cd ignition-lint
 poetry install
 ```
@@ -38,11 +38,11 @@ poetry install
 Run the CLI through Poetry:
 
 ```bash
-poetry run ignition-lint --help
+poetry run ign-lint --help
 
 # Or activate the virtualenv first
 poetry shell
-ignition-lint --help
+ign-lint --help
 ```
 
 Run the test suite:

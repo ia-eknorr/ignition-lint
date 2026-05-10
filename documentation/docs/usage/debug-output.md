@@ -88,7 +88,7 @@ When you change something that affects model building:
 `--debug-output <dir>` writes per-file debug artifacts during a normal lint run:
 
 ```bash
-ignition-lint --config rule_config.json --files "**/view.json" --debug-output ./analysis
+ign-lint --config rule_config.json --files "**/view.json" --debug-output ./analysis
 ```
 
 For each file linted, ignition-lint writes the flattened JSON and model under `./analysis/<filename>/`.
@@ -98,8 +98,8 @@ For each file linted, ignition-lint writes the flattened JSON and model under `.
 `--debug-nodes <type>` prints every node of the given type(s) the framework discovered:
 
 ```bash
-ignition-lint --files path/to/view.json --debug-nodes component
-ignition-lint --files path/to/view.json --debug-nodes expression_binding property
+ign-lint --files path/to/view.json --debug-nodes component
+ign-lint --files path/to/view.json --debug-nodes expression_binding property
 ```
 
 Available types: `component`, `property`, `expression_binding`, `property_binding`, `tag_binding`, `event_handler`, `message_handler`, `custom_method`, `transform`.
@@ -109,7 +109,7 @@ Available types: `component`, `property`, `expression_binding`, `property_bindin
 `--stats-only` builds the model but doesn't run rules — useful when you just want a count:
 
 ```bash
-ignition-lint --files "**/view.json" --stats-only --verbose
+ign-lint --files "**/view.json" --stats-only --verbose
 ```
 
 Output:
@@ -130,7 +130,7 @@ Stats for views/Dashboard/view.json:
 `--analyze-rules` reports which rules ran, which node types they targeted, and how many violations each produced:
 
 ```bash
-ignition-lint --config rule_config.json --files "**/view.json" --analyze-rules
+ign-lint --config rule_config.json --files "**/view.json" --analyze-rules
 ```
 
 Useful when:

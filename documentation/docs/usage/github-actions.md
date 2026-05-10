@@ -34,10 +34,10 @@ jobs:
           python-version: '3.11'
 
       - name: Install ignition-lint
-        run: pip install ignition-lint
+        run: pip install ign-lint
 
       - name: Lint views
-        run: ignition-lint --config rule_config.json --files "views/**/view.json"
+        run: ign-lint --config rule_config.json --files "views/**/view.json"
 ```
 
 The job fails (exit 1) if any error-severity violation is found. Warnings exit 0, so warnings appear in logs but don't fail the build unless you escalate them.
@@ -48,7 +48,7 @@ Ignition Lint also ships as a composite GitHub Action — use it directly withou
 
 ```yaml
 - name: Lint Ignition view files
-  uses: design-group/ignition-lint@v0.2.4
+  uses: bw-design-group/ignition-lint@v0.2.4
   with:
     files: "**/view.json"
     config: "rule_config.json"
@@ -61,7 +61,7 @@ By default, only errors fail the build. To fail on warnings too:
 
 ```yaml
 - name: Lint views
-  run: ignition-lint --config rule_config.json --files "**/view.json"
+  run: ign-lint --config rule_config.json --files "**/view.json"
 ```
 
 Warnings already block in this configuration. Pre-commit's `--ignore-warnings` is the opposite — it relaxes the default. CI typically runs without `--ignore-warnings` so warnings still fail.
@@ -84,8 +84,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - run: pip install ignition-lint
-      - run: ignition-lint --config ${{ matrix.config.config }} --files "${{ matrix.config.dir }}/**/view.json"
+      - run: pip install ign-lint
+      - run: ign-lint --config ${{ matrix.config.config }} --files "${{ matrix.config.dir }}/**/view.json"
 ```
 
 ## Annotating PRs with violations
@@ -96,7 +96,7 @@ Use the [`reviewdog/action-suggester`](https://github.com/reviewdog/action-sugge
 - name: Lint views
   id: lint
   run: |
-    ignition-lint --config rule_config.json --files "**/view.json" \
+    ign-lint --config rule_config.json --files "**/view.json" \
       --results-output results.txt || echo "violations found"
 
 - name: Annotate
@@ -189,7 +189,7 @@ Speed up CI by caching pip:
     python-version: '3.11'
     cache: 'pip'
 
-- run: pip install ignition-lint
+- run: pip install ign-lint
 ```
 
 ## Common patterns
@@ -222,7 +222,7 @@ jobs:
 
 - name: Lint changed files
   if: steps.changed.outputs.any_changed == 'true'
-  run: ignition-lint --config rule_config.json ${{ steps.changed.outputs.all_changed_files }}
+  run: ign-lint --config rule_config.json ${{ steps.changed.outputs.all_changed_files }}
 ```
 
 ## See also

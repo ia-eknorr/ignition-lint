@@ -14,10 +14,10 @@ By default ignition-lint does **not** use a whitelist. You have to opt in explic
 
 ```bash
 # 1. Generate a whitelist from your legacy directories
-ignition-lint --generate-whitelist "views/legacy/**/*.json" "views/deprecated/**/*.json"
+ign-lint --generate-whitelist "views/legacy/**/*.json" "views/deprecated/**/*.json"
 
 # 2. Lint with the whitelist
-ignition-lint --config rule_config.json --whitelist .whitelist.txt --files "**/view.json"
+ign-lint --config rule_config.json --whitelist .whitelist.txt --files "**/view.json"
 ```
 
 ## File format
@@ -45,35 +45,35 @@ views/vendor/VendorDashboard/view.json
 
 ```bash
 # Single pattern
-ignition-lint --generate-whitelist "views/legacy/**/*.json"
+ign-lint --generate-whitelist "views/legacy/**/*.json"
 
 # Multiple patterns
-ignition-lint --generate-whitelist \
+ign-lint --generate-whitelist \
     "views/legacy/**/*.json" \
     "views/deprecated/**/*.json"
 
 # Custom output filename
-ignition-lint --generate-whitelist "views/legacy/**/*.json" \
+ign-lint --generate-whitelist "views/legacy/**/*.json" \
     --whitelist-output custom-whitelist.txt
 
 # Append to existing whitelist (deduplicates automatically)
-ignition-lint --generate-whitelist "views/temp/**/*.json" --append
+ign-lint --generate-whitelist "views/temp/**/*.json" --append
 
 # Preview without writing
-ignition-lint --generate-whitelist "views/legacy/**/*.json" --dry-run
+ign-lint --generate-whitelist "views/legacy/**/*.json" --dry-run
 ```
 
 ## Using
 
 ```bash
 # Whitelist enabled
-ignition-lint --config rule_config.json --whitelist .whitelist.txt --files "**/view.json"
+ign-lint --config rule_config.json --whitelist .whitelist.txt --files "**/view.json"
 
 # Whitelist disabled (overrides --whitelist if both are set)
-ignition-lint --config rule_config.json --whitelist .whitelist.txt --no-whitelist --files "**/view.json"
+ign-lint --config rule_config.json --whitelist .whitelist.txt --no-whitelist --files "**/view.json"
 
 # Verbose mode shows ignored files
-ignition-lint --config rule_config.json --whitelist .whitelist.txt --files "**/view.json" --verbose
+ign-lint --config rule_config.json --whitelist .whitelist.txt --files "**/view.json" --verbose
 ```
 
 Verbose output:
@@ -103,10 +103,10 @@ Add `--whitelist` to your hook args:
 
 ```yaml
 repos:
-  - repo: https://github.com/design-group/ignition-lint
+  - repo: https://github.com/bw-design-group/ignition-lint
     rev: v0.2.4
     hooks:
-      - id: ignition-lint
+      - id: ign-lint
         args: ['--config=rule_config.json', '--whitelist=.whitelist.txt', '--files']
 ```
 
@@ -114,7 +114,7 @@ The full workflow:
 
 ```bash
 # 1. Generate whitelist
-ignition-lint --generate-whitelist "views/legacy/**/*.json"
+ign-lint --generate-whitelist "views/legacy/**/*.json"
 
 # 2. Annotate it (add comments explaining why files are whitelisted)
 $EDITOR .whitelist.txt
@@ -192,7 +192,7 @@ Whitelist filtering is fast: O(1) per file via a hash set. Loading a 600-file wh
 Verify the whitelist is loading:
 
 ```bash
-ignition-lint --config rule_config.json --whitelist .whitelist.txt --files "**/view.json" --verbose
+ign-lint --config rule_config.json --whitelist .whitelist.txt --files "**/view.json" --verbose
 # Should print: Loaded whitelist with N files
 ```
 

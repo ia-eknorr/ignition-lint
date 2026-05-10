@@ -11,7 +11,7 @@ After [installing](./installation.md), the fastest way to get a feel for ignitio
 ## Lint a single file
 
 ```bash
-ignition-lint path/to/view.json
+ign-lint path/to/view.json
 ```
 
 With no `--config` flag, the tool runs every registered rule with default options.
@@ -19,7 +19,7 @@ With no `--config` flag, the tool runs every registered rule with default option
 ## Lint many files
 
 ```bash
-ignition-lint --files "**/view.json"
+ign-lint --files "**/view.json"
 ```
 
 The `--files` flag accepts glob patterns. Quote the pattern so the shell doesn't expand it before ignition-lint sees it.
@@ -52,7 +52,7 @@ Create `rule_config.json` in your project root:
 Run with the config:
 
 ```bash
-ignition-lint --config rule_config.json --files "**/view.json"
+ign-lint --config rule_config.json --files "**/view.json"
 ```
 
 See [Configuration](./configuration.md) for the full schema.
@@ -62,7 +62,7 @@ See [Configuration](./configuration.md) for the full schema.
 `--verbose` adds per-file timing, ignored-file lists, and rule-coverage statistics:
 
 ```bash
-ignition-lint --config rule_config.json --files "**/view.json" --verbose
+ign-lint --config rule_config.json --files "**/view.json" --verbose
 ```
 
 ## Stats only (no rules)
@@ -70,7 +70,7 @@ ignition-lint --config rule_config.json --files "**/view.json" --verbose
 `--stats-only` skips rule execution and just prints model statistics — useful when developing rules or auditing what's in a view:
 
 ```bash
-ignition-lint --files "**/view.json" --stats-only
+ign-lint --files "**/view.json" --stats-only
 ```
 
 ## Output

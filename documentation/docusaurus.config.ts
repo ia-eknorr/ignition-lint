@@ -38,7 +38,7 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           routeBasePath: '/',
           editUrl:
-            'https://github.com/bw-design-group/ignition-lint/tree/main/documentation/',
+            'https://github.com/bw-bw-design-group/ignition-lint/tree/main/documentation/',
         },
         blog: false,
         theme: {
@@ -80,7 +80,7 @@ const config: Config = {
           label: 'Docs',
         },
         {
-          href: 'https://github.com/bw-design-group/ignition-lint',
+          href: 'https://github.com/bw-bw-design-group/ignition-lint',
           label: 'GitHub',
           position: 'right',
         },
@@ -102,11 +102,11 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/bw-design-group/ignition-lint',
+              href: 'https://github.com/bw-bw-design-group/ignition-lint',
             },
             {
               label: 'PyPI',
-              href: 'https://pypi.org/project/ignition-lint/',
+              href: 'https://pypi.org/project/ign-lint/',
             },
           ],
         },

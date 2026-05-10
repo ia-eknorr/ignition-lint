@@ -96,7 +96,7 @@ The view has:
 
 That's four problems across four different rules. Let's see ignition-lint find them.
 
-## Run ignition-lint
+## Run ign-lint
 
 In the same directory as `dashboard.json`, run:
 
@@ -127,7 +127,7 @@ Found 5 issues in dashboard.json:
 Summary: 4 errors, 1 warning
 ```
 
-ignition-lint exits with code 1 because there are error-severity violations. Warnings on their own would still exit 0 unless you enable strict-warning mode.
+ign-lint exits with code 1 because there are error-severity violations. Warnings on their own would still exit 0 unless you enable strict-warning mode.
 
 ## Anatomy of a violation
 

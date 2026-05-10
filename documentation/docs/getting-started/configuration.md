@@ -179,8 +179,8 @@ Pre-commit and CI typically use different configs — pre-commit favors warnings
 Pass each via `--config`:
 
 ```bash
-ignition-lint --config pre-commit-config.json --files "**/view.json"
-ignition-lint --config rule_config.json --files "**/view.json"
+ign-lint --config pre-commit-config.json --files "**/view.json"
+ign-lint --config rule_config.json --files "**/view.json"
 ```
 
 ## Next

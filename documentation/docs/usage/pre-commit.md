@@ -14,10 +14,10 @@ Add to `.pre-commit-config.yaml`:
 
 ```yaml
 repos:
-  - repo: https://github.com/design-group/ignition-lint
+  - repo: https://github.com/bw-design-group/ignition-lint
     rev: v0.2.4  # use the latest release tag
     hooks:
-      - id: ignition-lint
+      - id: ign-lint
 ```
 
 Install hooks:
@@ -39,16 +39,16 @@ Install only the Python package — no test fixtures, docker files, or docs in t
 repos:
   - repo: local
     hooks:
-      - id: ignition-lint
+      - id: ign-lint
         name: Ignition Lint
-        entry: ignition-lint
+        entry: ign-lint
         language: python
         types: [json]
         files: view\.json$
         args: ['--config=rule_config.json', '--files']
         pass_filenames: true
         additional_dependencies:
-          - 'git+https://github.com/design-group/ignition-lint@v0.2.4'
+          - 'git+https://github.com/bw-design-group/ignition-lint@v0.2.4'
 ```
 
 **Pros:** ~1 MB cache footprint
@@ -60,10 +60,10 @@ Both options accept a custom `rule_config.json`:
 
 ```yaml
 repos:
-  - repo: https://github.com/design-group/ignition-lint
+  - repo: https://github.com/bw-design-group/ignition-lint
     rev: v0.2.4
     hooks:
-      - id: ignition-lint
+      - id: ign-lint
         args: ['--config=rule_config.json', '--files']
 ```
 
@@ -84,7 +84,7 @@ To allow commits with warnings (block only on errors):
 
 ```yaml
 hooks:
-  - id: ignition-lint
+  - id: ign-lint
     args: ['--config=rule_config.json', '--files', '--ignore-warnings']
 ```
 
@@ -96,7 +96,7 @@ Pair pre-commit with a whitelist to exempt legacy files:
 
 ```yaml
 hooks:
-  - id: ignition-lint
+  - id: ign-lint
     args:
       - '--config=rule_config.json'
       - '--whitelist=.whitelist.txt'
@@ -106,7 +106,7 @@ hooks:
 Generate the whitelist once and commit it:
 
 ```bash
-ignition-lint --generate-whitelist "views/legacy/**/*.json"
+ign-lint --generate-whitelist "views/legacy/**/*.json"
 git add .whitelist.txt
 git commit -m "Add whitelist for legacy views (technical debt)"
 ```
@@ -119,7 +119,7 @@ Test fixtures often contain intentional violations. Exclude them:
 
 ```yaml
 hooks:
-  - id: ignition-lint
+  - id: ign-lint
     exclude: '^tests/.*|.*test.*\.json$'
 ```
 
@@ -136,10 +136,10 @@ pre-commit run --all-files
 pre-commit run
 
 # Run only the ignition-lint hook
-pre-commit run ignition-lint
+pre-commit run ign-lint
 
 # Run on specific files
-pre-commit run ignition-lint --files path/to/view.json
+pre-commit run ign-lint --files path/to/view.json
 ```
 
 ### Caveat: `--all-files` on large repositories
@@ -147,7 +147,7 @@ pre-commit run ignition-lint --files path/to/view.json
 `pre-commit run --all-files` passes every matched file as a CLI argument. With hundreds of view files and long paths, this can exceed `ARG_MAX` on some systems. For full-repository scans, invoke ignition-lint directly:
 
 ```bash
-ignition-lint --files "views/**/view.json" --config rule_config.json
+ign-lint --files "views/**/view.json" --config rule_config.json
 ```
 
 The CLI's internal globber sidesteps the argv limit entirely.

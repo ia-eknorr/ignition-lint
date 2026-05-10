@@ -40,6 +40,6 @@ Ignition Lint parses Perspective view definitions, builds an object model of com
 
 ## Project links
 
-- **Source**: [github.com/design-group/ignition-lint](https://github.com/design-group/ignition-lint)
-- **Package**: [pypi.org/project/ignition-lint](https://pypi.org/project/ignition-lint/)
-- **Issues**: [GitHub Issues](https://github.com/design-group/ignition-lint/issues)
+- **Source**: [github.com/bw-design-group/ignition-lint](https://github.com/bw-design-group/ignition-lint)
+- **Package**: [pypi.org/project/ign-lint](https://pypi.org/project/ign-lint/)
+- **Issues**: [GitHub Issues](https://github.com/bw-design-group/ignition-lint/issues)
