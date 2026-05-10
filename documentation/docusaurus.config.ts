@@ -30,6 +30,8 @@ const config: Config = {
     locales: ['en'],
   },
 
+  plugins: ['docusaurus-plugin-llms-txt'],
+
   presets: [
     [
       'classic',
@@ -38,7 +40,7 @@ const config: Config = {
           sidebarPath: './sidebars.ts',
           routeBasePath: '/',
           editUrl:
-            'https://github.com/bw-bw-design-group/ignition-lint/tree/main/documentation/',
+            'https://github.com/bw-design-group/ignition-lint/tree/main/documentation/',
         },
         blog: false,
         theme: {
@@ -80,7 +82,7 @@ const config: Config = {
           label: 'Docs',
         },
         {
-          href: 'https://github.com/bw-bw-design-group/ignition-lint',
+          href: 'https://github.com/bw-design-group/ignition-lint',
           label: 'GitHub',
           position: 'right',
         },
@@ -102,7 +104,7 @@ const config: Config = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/bw-bw-design-group/ignition-lint',
+              href: 'https://github.com/bw-design-group/ignition-lint',
             },
             {
               label: 'PyPI',
