@@ -273,6 +273,11 @@ def main():
         "--parameter-style-rgx",
         help="Regex pattern for naming convention style of parameters",
     )
+    parser.add_argument(
+        "--allow-acronyms",
+        default="false",
+        help="Allow acronyms in component and parameter names",
+    )
     args = parser.parse_args()
 
     input_patterns = args.files.split(",")
@@ -289,6 +294,7 @@ def main():
         parameter_style=args.parameter_style,
         component_style_rgx=args.component_style_rgx,
         parameter_style_rgx=args.parameter_style_rgx,
+        allow_acronyms=args.allow_acronyms.lower() == "true",
     )
     number_of_errors = 0
 

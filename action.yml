@@ -37,7 +37,7 @@ runs:
           --component-style "${{ inputs.component_style }}" \
           --parameter-style "${{ inputs.parameter_style }}" \
           --component-style-rgx "${{ inputs.component_style_rgx }}" \
-          --parameter-style-rgx "${{ inputs.parameter_style_rgx }}"
+          --parameter-style-rgx "${{ inputs.parameter_style_rgx }}" \
           --allow-acronyms "${{ inputs.allow_acronyms }}"
       shell: bash
       env:
