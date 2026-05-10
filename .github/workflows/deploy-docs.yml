@@ -1,0 +1,79 @@
+name: Deploy documentation
+
+# Builds the Docusaurus site under documentation/ and publishes it to
+# GitHub Pages. Triggered on every push to main that touches the docs
+# (or the CHANGELOG, which the docs site mirrors), and runnable on
+# demand via the Actions tab.
+#
+# Setup required (one-time, in repo Settings → Pages):
+#   Source: "GitHub Actions"
+#
+# Once enabled, the published site is at:
+#   https://bw-design-group.github.io/ignition-lint/
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'documentation/**'
+      - 'CHANGELOG.md'
+      - '.github/workflows/deploy-docs.yml'
+  workflow_dispatch:
+
+# Permissions for the GitHub Pages deployment job.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Only one deploy can run at a time. New pushes cancel any in-flight build.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: Build site
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: documentation
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: documentation/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        # `prebuild` hook copies CHANGELOG.md into docs/ before Docusaurus runs.
+        # `onBrokenLinks: 'throw'` in docusaurus.config.ts means broken links
+        # fail the build here.
+        run: npm run build
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: documentation/build
+
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,0 +1,71 @@
+/**
+ * Global CSS. Infima ships with the classic preset.
+ */
+
+:root {
+  --ifm-color-primary: #2e8555;
+  --ifm-color-primary-dark: #29784c;
+  --ifm-color-primary-darker: #277148;
+  --ifm-color-primary-darkest: #205d3b;
+  --ifm-color-primary-light: #33925d;
+  --ifm-color-primary-lighter: #359962;
+  --ifm-color-primary-lightest: #3cad6e;
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.1);
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #25c2a0;
+  --ifm-color-primary-dark: #21af90;
+  --ifm-color-primary-darker: #1fa588;
+  --ifm-color-primary-darkest: #1a8870;
+  --ifm-color-primary-light: #29d5b0;
+  --ifm-color-primary-lighter: #32d8b4;
+  --ifm-color-primary-lightest: #4fddbf;
+  --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* ===== Reference docs: config option styling ===== */
+/* Targets H4 headings whose first child is a <code> element — the
+   option-name pattern used in reference pages (e.g. `#### \`convention\``). */
+
+.markdown h4:has(> code:first-child) {
+  font-size: 1.1rem;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+  padding: 0.55rem 0.9rem;
+  border-left: 3px solid var(--ifm-color-primary);
+  background: var(--ifm-color-emphasis-100);
+  border-radius: 0 4px 4px 0;
+}
+
+.markdown h4 > code:first-child {
+  font-size: 1em;
+  background: transparent;
+  padding: 0;
+  font-weight: 700;
+  color: inherit;
+  border: none;
+}
+
+/* Tighten the gap when an HR or H3 group heading directly precedes an option */
+.markdown hr + h4:has(> code:first-child),
+.markdown h3 + h4:has(> code:first-child),
+.markdown h3 + p + h4:has(> code:first-child) {
+  margin-top: 1rem;
+}
+
+/* Metadata line ("Type: ... · Default: ...") immediately after an option heading */
+.markdown h4:has(> code:first-child) + p {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.95em;
+  margin-top: -0.1rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Subtle horizontal rule between option blocks */
+.markdown hr {
+  border: 0;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  margin: 1.5rem 0;
+}
