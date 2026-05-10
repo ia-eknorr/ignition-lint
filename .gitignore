@@ -31,5 +31,8 @@ bin/
 # Build artifacts
 dist/
 
+# Jython cache
+**/.jython_cache/
+
 # Ignition specific content
 .resources/

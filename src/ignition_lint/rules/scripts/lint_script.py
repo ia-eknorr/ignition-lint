@@ -17,8 +17,9 @@ from io import StringIO
 from pylint import lint
 from pylint.reporters.text import TextReporter
 
-from ..common import ScriptRule
-from ...model.node_types import ScriptNode
+from ..common import ScriptRule, FixableMixin
+from ...common.fix_operations import Fix, FixOperation, FixOperationType
+from ...model.node_types import ScriptNode, NodeType
 
 
 @dataclass
@@ -36,11 +37,11 @@ class PylintViolation:
 	severity: str = ''  # Severity level ("error" or "warning") - set by rule
 
 
-class PylintScriptRule(ScriptRule):
+class PylintScriptRule(FixableMixin, ScriptRule):
 	"""Rule to run pylint on all script types using the simplified interface."""
 
 	def __init__(
-		self, severity="error", pylintrc=None, debug=False, batch_mode=False, debug_dir=None,
+		self, severity="error", pylintrc=None, debug=False, batch_mode=False, *, debug_dir=None,
 		category_mapping=None
 	):
 		super().__init__(severity=severity)  # Targets all script types by default
@@ -84,19 +85,17 @@ class PylintScriptRule(ScriptRule):
 			if os.path.isabs(pylintrc):
 				if os.path.exists(pylintrc):
 					return pylintrc
-				else:
-					print(f"⚠️  Warning: Specified pylintrc not found: {pylintrc}")
-					print(f"   Falling back to standard location search...")
+				print(f"⚠️  Warning: Specified pylintrc not found: {pylintrc}")
+				print("   Falling back to standard location search...")
 			else:
 				# Try relative to current working directory
 				abs_path = os.path.join(os.getcwd(), pylintrc)
 				if os.path.exists(abs_path):
 					return abs_path
-				else:
-					print(f"⚠️  Warning: Specified pylintrc not found: {pylintrc}")
-					print(f"   Tried: {abs_path}")
-					print(f"   Current directory: {os.getcwd()}")
-					print("   Falling back to standard location search...")
+				print(f"⚠️  Warning: Specified pylintrc not found: {pylintrc}")
+				print(f"   Tried: {abs_path}")
+				print(f"   Current directory: {os.getcwd()}")
+				print("   Falling back to standard location search...")
 
 		# Fall back to standard location: .config/ignition.pylintrc
 		# First, search from current directory up to find the project root (user's custom config)
@@ -139,6 +138,7 @@ class PylintScriptRule(ScriptRule):
 			self.warnings = []
 			self.pylint_violations = []
 			self.collected_scripts = {}
+			self.reset_fixes()
 		# In batch mode: don't reset anything - accumulate across all files
 
 		# Filter nodes that this rule applies to
@@ -181,6 +181,80 @@ class PylintScriptRule(ScriptRule):
 		if "::" in composite_key:
 			return composite_key.split("::", 1)[1]
 		return composite_key
+
+	@staticmethod
+	def _strip_trailing_whitespace(script_content: str) -> str:
+		"""Strip trailing whitespace from each line of a script."""
+		return '\n'.join(line.rstrip() for line in script_content.split('\n'))
+
+	def _get_script_content_path(self, node: ScriptNode) -> Optional[str]:
+		"""
+		Map a script node to its JSON path for the script content value.
+
+		Returns the JSON dict access path (list), or None if not resolvable.
+		"""
+		if not self._path_translator:
+			return None
+
+		# Determine the suffix based on node type
+		suffix_candidates = []
+		if node.node_type == NodeType.TRANSFORM:
+			suffix_candidates = ['.code']
+		elif node.node_type == NodeType.EVENT_HANDLER:
+			suffix_candidates = ['.config.script', '.script']
+		elif node.node_type in (NodeType.MESSAGE_HANDLER, NodeType.CUSTOM_METHOD):
+			suffix_candidates = ['.script']
+
+		for suffix in suffix_candidates:
+			model_path = f"{node.path}{suffix}"
+			json_path = self._path_translator.model_path_to_json_path(model_path)
+			if json_path is not None:
+				return json_path
+
+		return None
+
+	def _generate_trailing_whitespace_fixes(self, scripts: Dict[str, ScriptNode]):
+		"""Generate Fix objects for scripts that have C0303 (trailing-whitespace) violations."""
+		if not self.has_fix_context or self.batch_mode:
+			return
+
+		# Collect composite keys that have C0303 violations
+		affected_keys = {v.path for v in self.pylint_violations if v.code == 'C0303'}
+		if not affected_keys:
+			return
+
+		for composite_key in affected_keys:
+			if composite_key not in scripts:
+				continue
+
+			node = scripts[composite_key]
+			original = node.script
+			stripped = self._strip_trailing_whitespace(original)
+
+			if stripped == original:
+				continue
+
+			json_path = self._get_script_content_path(node)
+			if json_path is None:
+				continue
+
+			display_path = self._format_script_path(composite_key)
+			fix = Fix(
+				rule_name='PylintScriptRule',
+				violation_message=f"{display_path}: Trailing whitespace (C0303)",
+				description=f"Remove trailing whitespace from script at {display_path}",
+				operations=[
+					FixOperation(
+						operation=FixOperationType.SET_VALUE,
+						json_path=json_path,
+						old_value=original,
+						new_value=stripped,
+						description="Strip trailing whitespace from all lines",
+					)
+				],
+				is_safe=True,
+			)
+			self.add_fix(fix)
 
 	def get_category_grouped_violations(self) -> Dict[str, Dict[str, List[str]]]:
 		"""
@@ -306,6 +380,9 @@ class PylintScriptRule(ScriptRule):
 		# Note: _run_pylint_batch populates self.pylint_violations with structured data
 		_path_to_issues = self._run_pylint_batch(scripts)
 
+		# Generate auto-fixes for trailing whitespace violations
+		self._generate_trailing_whitespace_fixes(scripts)
+
 		# Add placeholder violations for counting purposes (won't be displayed due to custom formatting)
 		# This ensures file counts are correct
 		for violation in self.pylint_violations:
@@ -372,8 +449,7 @@ class PylintScriptRule(ScriptRule):
 		if self.debug_dir_config:
 			if os.path.isabs(self.debug_dir_config):
 				return self.debug_dir_config
-			else:
-				return os.path.join(cwd, self.debug_dir_config)
+			return os.path.join(cwd, self.debug_dir_config)
 
 		# Priority 2: Try to detect if we're in a test environment and use tests/debug
 		current_path = cwd
@@ -381,7 +457,7 @@ class PylintScriptRule(ScriptRule):
 			if os.path.basename(current_path) == 'tests':
 				# We're in tests directory
 				return os.path.join(current_path, "debug")
-			elif os.path.exists(os.path.join(current_path, 'tests')):
+			if os.path.exists(os.path.join(current_path, 'tests')):
 				# Tests directory exists in current path
 				return os.path.join(current_path, "tests", "debug")
 			current_path = os.path.dirname(current_path)

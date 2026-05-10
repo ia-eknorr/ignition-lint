@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Auto-fix for trailing whitespace (C0303) in PylintScriptRule via `--fix` flag
+- PylintScriptRule now uses FixableMixin so the existing fix infrastructure discovers it automatically
+
 ## [0.4.1] - 2026-02-20
 
 ### Changed
