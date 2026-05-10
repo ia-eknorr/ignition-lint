@@ -21,7 +21,8 @@ src/ignition_lint/rules/
 ├── common.py                    # Base LintingRule class and utilities
 ├── registry.py                  # Rule registration system
 │
-├── examples/                    # Example rules for learning and testing
+├── _examples/                   # Example rules for learning and testing
+│   │                            # (underscore prefix excludes from auto-discovery)
 │   ├── __init__.py
 │   ├── example_rule.py         # Simple rule examples
 │   └── example_mixed_severity.py

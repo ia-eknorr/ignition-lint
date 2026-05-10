@@ -33,6 +33,10 @@ class RuleRegistry:
 		"""
 		Register a rule class with the registry.
 
+		Idempotent: registering the same class object under the same name is a
+		silent no-op. Registering a *different* class under an already-used name
+		raises RuleValidationError.
+
 		Args:
 			rule_class: The rule class to register
 			rule_name: Optional custom name for the rule (defaults to class name)
@@ -41,21 +45,27 @@ class RuleRegistry:
 			The registered rule name
 
 		Raises:
-			RuleValidationError: If the rule fails validation
+			RuleValidationError: If the rule fails validation or a different class
+				is already registered under the same name.
 		"""
 		if not rule_name:
 			rule_name = rule_class.__name__
 
-		# Validate the rule
+		existing = self._rules.get(rule_name)
+		if existing is rule_class:
+			return rule_name
+		if existing is not None:
+			raise RuleValidationError(
+				f"Rule name {rule_name} is already registered to a different class "
+				f"({existing.__module__}.{existing.__name__})"
+			)
+
+		# Validate the rule (static checks only — no instantiation)
 		self._validate_rule(rule_class, rule_name)
 
-		# Extract metadata
-		metadata = self._extract_rule_metadata(rule_class)
-
-		# Register the rule
+		# Register the rule. Metadata is computed lazily in get_rule_metadata().
 		self._rules[rule_name] = rule_class
 		self._validated_rules.add(rule_name)
-		self._rule_metadata[rule_name] = metadata
 
 		return rule_name
 
@@ -72,8 +82,12 @@ class RuleRegistry:
 		return list(self._rules.keys())
 
 	def get_rule_metadata(self, rule_name: str) -> Optional[Dict[str, Any]]:
-		"""Get metadata for a specific rule."""
-		return self._rule_metadata.get(rule_name)
+		"""Get metadata for a specific rule. Computed lazily on first access."""
+		if rule_name not in self._rules:
+			return None
+		if rule_name not in self._rule_metadata:
+			self._rule_metadata[rule_name] = self._extract_rule_metadata(self._rules[rule_name])
+		return self._rule_metadata[rule_name]
 
 	def is_registered(self, rule_name: str) -> bool:
 		"""Check if a rule is registered."""
@@ -99,9 +113,14 @@ class RuleRegistry:
 			if py_file.name in ["__init__.py", "registry.py", "common.py"]:
 				continue
 
+			# Skip private subpackages (e.g. _examples) — they are intentionally
+			# excluded from auto-discovery. Test code may still import them directly.
+			relative_path = py_file.relative_to(package_path)
+			if any(part.startswith("_") for part in relative_path.parts[:-1]):
+				continue
+
 			try:
 				# Import the module - build the correct module path for subdirectories
-				relative_path = py_file.relative_to(package_path)
 				module_parts = list(relative_path.parts[:-1]) + [relative_path.stem]
 				module_name = f"ignition_lint.rules.{'.'.join(module_parts)}"
 				module = importlib.import_module(module_name)
@@ -127,7 +146,11 @@ class RuleRegistry:
 
 	def _validate_rule(self, rule_class: Type[LintingRule], rule_name: str) -> None:
 		"""
-		Validate that a rule class meets requirements.
+		Validate that a rule class meets the structural requirements.
+
+		Static checks only — does not instantiate the rule. The contract that a
+		rule can be created from an empty config is verified by the test suite,
+		not at registration time.
 
 		Args:
 			rule_class: Rule class to validate
@@ -136,32 +159,20 @@ class RuleRegistry:
 		Raises:
 			RuleValidationError: If validation fails
 		"""
-		# Check if it's a class
 		if not inspect.isclass(rule_class):
 			raise RuleValidationError(f"Rule {rule_name} must be a class")
 
-		# Check if it inherits from LintingRule
 		if not issubclass(rule_class, LintingRule):
 			raise RuleValidationError(f"Rule {rule_name} must inherit from LintingRule")
 
-		# Check if it's not the base class itself
 		if rule_class is LintingRule:
 			raise RuleValidationError("Cannot register the base LintingRule class")
 
-		# Check for required abstract properties
 		if not hasattr(rule_class, 'error_message'):
 			raise RuleValidationError(f"Rule {rule_name} must implement error_message property")
 
-		# Try to instantiate with default parameters to check for basic issues
-		try:
-			# Use create_from_config to test the complete initialization path
-			rule_class.create_from_config({})
-		except Exception as e:
-			raise RuleValidationError(f"Rule {rule_name} failed basic instantiation test: {e}") from e
-
-		# Check for name conflicts
-		if rule_name in self._rules:
-			raise RuleValidationError(f"Rule name {rule_name} is already registered")
+		if not callable(getattr(rule_class, 'create_from_config', None)):
+			raise RuleValidationError(f"Rule {rule_name} must define create_from_config")
 
 	def _extract_rule_metadata(self, rule_class: Type[LintingRule]) -> Dict[str, Any]:
 		"""Extract metadata from a rule class."""
