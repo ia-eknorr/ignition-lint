@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-05-10
+
 ### Added
 - Auto-fix for trailing whitespace (C0303) in PylintScriptRule via `--fix` flag [d775d45]
 - PylintScriptRule now uses FixableMixin so the existing fix infrastructure discovers it automatically [d775d45]
@@ -292,7 +294,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Initial tracked release
 
-[Unreleased]: https://github.com/design-group/ignition-lint/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/design-group/ignition-lint/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/design-group/ignition-lint/compare/v0.5.0-rc1...v0.5.0
 [0.4.1]: https://github.com/design-group/ignition-lint/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/design-group/ignition-lint/compare/v0.3.6...v0.4.0
 [0.3.6]: https://github.com/design-group/ignition-lint/compare/v0.3.5...v0.3.6
