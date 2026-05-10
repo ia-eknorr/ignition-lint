@@ -227,7 +227,7 @@ python test_runner.py --run-all
 
 ## 📚 Additional Resources
 
-- **Example Rules:** `src/ignition_lint/rules/example_rule.py`
+- **Example Rules:** `src/ignition_lint/rules/_examples/example_rule.py` (excluded from auto-discovery)
 - **Test Cases:** `tests/cases/` for real view.json examples
 - **Configuration Examples:** `tests/configs/` for rule configuration patterns
 - **Framework Code:** `src/ignition_lint/` for understanding internals

@@ -247,14 +247,20 @@ def make_unique_output_path(original_path: Path) -> Path:
 		batch_num += 1
 
 
-def load_config(config_path: str) -> dict:
-	"""Load configuration from a JSON file."""
+def load_config(config_path: str) -> Optional[dict]:
+	"""
+	Load configuration from a JSON file.
+
+	Returns the parsed dict on success (which may legitimately be empty when
+	the user wants to run all rules with default kwargs), or None if the file
+	cannot be read or parsed.
+	"""
 	try:
 		with open(config_path, 'r', encoding='utf-8') as f:
 			return json.load(f)
 	except (FileNotFoundError, json.JSONDecodeError) as e:
 		print(f"Error loading config file {config_path}: {e}")
-		return {}
+		return None
 
 
 def load_whitelist(whitelist_path: str) -> set:
@@ -384,37 +390,100 @@ def generate_whitelist(patterns: List[str], output_file: str, append: bool = Fal
 		sys.exit(1)
 
 
-def create_rules_from_config(config: dict) -> list:
+def create_rules_from_config(config: dict) -> tuple:
 	"""
-	Create rule instances from config dictionary using self-processing rules.
+	Create rule instances for every registered rule.
+
+	All registered rules run by default. The user's config provides per-rule
+	overrides: `kwargs` to customize behavior, or `enabled: false` to opt out.
+	Rules absent from the config run with default kwargs.
 
 	Args:
-		config: Configuration dictionary from config file
+		config: Configuration dictionary from config file (may be empty)
+
+	Returns:
+		Tuple of (rules, statuses):
+			rules    -- list of instantiated LintingRule objects
+			statuses -- list of dicts describing every registered rule, one per
+						rule, with keys:
+						  name   : rule class name
+						  state  : "loaded" | "disabled" | "error"
+						  source : "config" if user supplied kwargs, else "defaults"
+						  detail : optional error/skip detail (str or None)
 	"""
-	rules = []
+	# Always-on warning for config keys that don't resolve to a known rule.
 	for rule_name, rule_config in config.items():
-		# Skip private keys or invalid configurations
 		if rule_name.startswith("_") or not isinstance(rule_config, dict):
 			continue
+		if rule_name not in RULES_MAP:
+			print(f"Unknown rule in config: {rule_name}")
+
+	rules = []
+	statuses = []
+	for rule_name, rule_class in RULES_MAP.items():
+		rule_config = config.get(rule_name, {})
+		if not isinstance(rule_config, dict):
+			rule_config = {}
+
+		has_user_kwargs = bool(rule_config.get('kwargs'))
+		source = "config" if (rule_name in config or has_user_kwargs) else "defaults"
 
 		if not rule_config.get('enabled', True):
-			print(f"Skipping rule {rule_name} (config['enabled'] == False)")
+			statuses.append({
+				"name": rule_name,
+				"state": "disabled",
+				"source": source,
+				"detail": "enabled=false",
+			})
 			continue
 
-		if rule_name not in RULES_MAP:
-			print(f"Unknown rule: {rule_name}")
-			continue
-
-		rule_class = RULES_MAP[rule_name]
 		kwargs = rule_config.get('kwargs', {})
 
 		try:
 			rules.append(rule_class.create_from_config(kwargs))
+			statuses.append({
+				"name": rule_name,
+				"state": "loaded",
+				"source": source,
+				"detail": None,
+			})
 		except (TypeError, ValueError, AttributeError) as e:
 			print(f"Error creating rule {rule_name}: {e}")
+			statuses.append({
+				"name": rule_name,
+				"state": "error",
+				"source": source,
+				"detail": str(e),
+			})
 			continue
 
-	return rules
+	return rules, statuses
+
+
+def _print_rule_breakdown(statuses: list, config_path: str) -> None:
+	"""
+	Print a per-rule breakdown showing each registered rule's source.
+
+	Called from setup_linter() under --verbose. Loaded rules are shown with
+	their kwargs source (the config file or "defaults"); disabled rules are
+	shown with the reason; rules that failed to instantiate are shown with
+	the error.
+	"""
+	loaded = [s for s in statuses if s["state"] == "loaded"]
+	disabled = [s for s in statuses if s["state"] == "disabled"]
+	errored = [s for s in statuses if s["state"] == "error"]
+
+	name_width = max((len(s["name"]) for s in statuses), default=0)
+	print(f"✅ Loaded {len(loaded)} rules:")
+	for status in loaded:
+		source = f"config: {config_path}" if status["source"] == "config" else "defaults"
+		print(f"  • {status['name']:<{name_width}}  ({source})")
+
+	for status in disabled:
+		print(f"  ⊘ {status['name']:<{name_width}}  (skipped: {status['detail']})")
+
+	for status in errored:
+		print(f"  ✗ {status['name']:<{name_width}}  (error: {status['detail']})")
 
 
 def get_view_file(file_path: Path) -> Dict[str, Any]:
@@ -629,12 +698,12 @@ def setup_linter(args) -> LintEngine:
 		lint_engine = LintEngine([], debug_output_dir=args.debug_output)
 	else:
 		config = load_config(args.config)
-		if not config:
+		if config is None:
 			print("❌ No valid configuration found")
 			sys.exit(1)
 
 		print(f"🔧 Loaded configuration from {args.config}")
-		rules = create_rules_from_config(config)
+		rules, rule_statuses = create_rules_from_config(config)
 		if not rules:
 			print("❌ No valid rules configured")
 			sys.exit(1)
@@ -642,7 +711,7 @@ def setup_linter(args) -> LintEngine:
 		lint_engine = LintEngine(rules, debug_output_dir=args.debug_output)
 
 		if args.verbose:
-			print(f"✅ Loaded {len(rules)} rules: {[rule.__class__.__name__ for rule in rules]}")
+			_print_rule_breakdown(rule_statuses, args.config)
 
 	# Inform about debug output
 	if args.debug_output:

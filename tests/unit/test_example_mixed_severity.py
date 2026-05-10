@@ -7,6 +7,11 @@ This serves as both a test and a demonstration of how to test mixed-severity rul
 from fixtures.base_test import BaseRuleTest
 from fixtures.test_helpers import get_test_config, create_mock_view, create_temp_view_file
 
+# Example rules live under rules/_examples and are excluded from auto-discovery.
+# Importing the module here triggers @register_rule so the test can look it up by name.
+import ignition_lint.rules._examples.example_mixed_severity  # noqa: F401  pylint: disable=unused-import
+
+
 class TestExampleMixedSeverityRule(BaseRuleTest):
 	"""Test the ExampleMixedSeverityRule to demonstrate mixed severity testing."""
 
