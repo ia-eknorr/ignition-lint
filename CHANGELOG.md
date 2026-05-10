@@ -8,8 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Auto-fix for trailing whitespace (C0303) in PylintScriptRule via `--fix` flag
-- PylintScriptRule now uses FixableMixin so the existing fix infrastructure discovers it automatically
+- Auto-fix for trailing whitespace (C0303) in PylintScriptRule via `--fix` flag [d775d45]
+- PylintScriptRule now uses FixableMixin so the existing fix infrastructure discovers it automatically [d775d45]
+
+### Changed
+- Gitignore jython cache directories [67e8ede]
+- Each pre-commit batch invocation now reports its own honest totals; removed the terminal-summary override that aggregated escalating totals across batches (the `_AGGREGATED_SUMMARY.txt` file is still written when batch files exist) [dacf480]
+
+### Fixed
+- Stale `_AGGREGATED_SUMMARY.txt` from a previous run no longer pollutes a later passing run's reported totals; cleanup now removes stale summary files (≥5s old) and the aggregator no longer reads existing summaries on non-batch paths [dacf480]
 
 ## [0.4.1] - 2026-02-20
 

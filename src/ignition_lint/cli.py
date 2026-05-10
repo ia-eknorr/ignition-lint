@@ -174,10 +174,6 @@ def cleanup_old_batch_files(output_path: Path) -> None:
 	# Check batch files (e.g., results_pid*_batch*.txt)
 	pattern = f"{base_name}*batch*.txt"
 	for file_path in output_path.parent.glob(pattern):
-		# Skip aggregated summary files
-		if 'AGGREGATED_SUMMARY' in file_path.name:
-			continue
-
 		# Extract PID from filename (e.g., results_pid12345_batch1.txt)
 		if f'_pid{current_pid}_' in file_path.name:
 			# Same PID as current run - skip
@@ -195,6 +191,19 @@ def cleanup_old_batch_files(output_path: Path) -> None:
 
 		# Old batch file from previous run - mark for deletion
 		files_to_clean.append(file_path)
+
+	# Check aggregated summary file (e.g., results_AGGREGATED_SUMMARY.txt)
+	# These have no PID in the name, so age-based check only.
+	# Stale summaries pollute new runs by reporting old totals (see
+	# aggregate_batch_results: it reads an existing summary for non-batch paths).
+	summary_file = output_path.parent / f"{base_name}_AGGREGATED_SUMMARY.txt"
+	if summary_file.exists():
+		try:
+			file_age = current_time - summary_file.stat().st_mtime
+			if file_age >= 5:
+				files_to_clean.append(summary_file)
+		except OSError:
+			pass
 
 	# Clean up old files
 	if files_to_clean:
@@ -961,35 +970,10 @@ def aggregate_batch_results(results_path: Path) -> Optional[Dict[str, int]]:
 	else:
 		base_name = results_path.stem
 
-	# Check if this is a batched result (has _pid and _batch in name)
+	# Only aggregate when this invocation produced a batch file (has _pid and _batch).
+	# A non-batch path means this is a standalone or first-batch run; its own totals
+	# are already correct and the caller no longer overrides them from the summary.
 	is_batch_file = '_pid' in results_path.name and '_batch' in results_path.name
-
-	# If not a batch file, check for existing aggregated summary
-	summary_path = parent_dir / f"{base_name}_AGGREGATED_SUMMARY.txt"
-	if not is_batch_file and summary_path.exists():
-		# Read and return totals from existing aggregated summary
-		# (Only for non-batch files like results.txt)
-		try:
-			with open(summary_path, 'r', encoding='utf-8') as f:
-				content = f.read()
-				files_match = re.search(r'Files processed:\s+(\d+)', content)
-				warnings_match = re.search(r'Total warnings:\s+(\d+)', content)
-				errors_match = re.search(r'Total errors:\s+(\d+)', content)
-				issues_match = re.search(r'Files with issues:\s+(\d+)', content)
-				clean_match = re.search(r'Clean files:\s+(\d+)', content)
-
-				if files_match:
-					return {
-						'files': int(files_match.group(1)),
-						'warnings': int(warnings_match.group(1)) if warnings_match else 0,
-						'errors': int(errors_match.group(1)) if errors_match else 0,
-						'issues': int(issues_match.group(1)) if issues_match else 0,
-						'clean': int(clean_match.group(1)) if clean_match else 0,
-					}
-		except (OSError, IOError):
-			pass  # If we can't read it, fall through to aggregation logic
-
-	# If not a batch file, no aggregation needed
 	if not is_batch_file:
 		return None
 
@@ -1481,15 +1465,11 @@ def main():
 		)
 		print("\n" + f"📝 Results written to: {results_path}")
 
-		# Aggregate batch results if multiple batches exist
-		aggregated_totals = aggregate_batch_results(results_path)
-
-		# Use aggregated totals for final summary if available
-		if aggregated_totals:
-			total_warnings = aggregated_totals['warnings']
-			total_errors = aggregated_totals['errors']
-			processed_files = aggregated_totals['files']
-			files_with_issues = aggregated_totals['issues']
+		# Write _AGGREGATED_SUMMARY.txt across batch files (CI/disk artifact only).
+		# Each invocation prints its own honest totals; we no longer override the
+		# terminal summary with aggregated values, since pre-commit runs N separate
+		# processes and the escalating per-batch overrides were confusing.
+		aggregate_batch_results(results_path)
 
 	# Print final summary
 	print_final_summary(
