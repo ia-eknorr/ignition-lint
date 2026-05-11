@@ -5,7 +5,7 @@ description = "A linter for Ignition JSON files"
 authors = ["Alex Spyksma", "Eric Knorr"]
 license = "MIT"
 readme = "README.md"
-homepage = "https://github.com/design-group/ignition-lint"
+homepage = "https://github.com/bw-design-group/ignition-lint"
 packages = [
     { include = "ignition_lint", from = "src" }
 ]
