@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-05-10
+
 ### Added
 - Docusaurus 3 documentation site under `documentation/`, published to GitHub Pages at https://bw-design-group.github.io/ignition-lint on push to `main`. Covers tutorial, per-rule user guides, full per-rule technical references with per-option breakdowns, usage (CLI, pre-commit, GitHub Actions, whitelist, debug output), developer guide (architecture, creating rules, API reference, testing, troubleshooting), and a changelog mirror auto-copied from this file. [094f971]
 - `.github/workflows/deploy-docs.yml` — builds the docs site and deploys to GitHub Pages on push to `main` (path-filtered to `documentation/**` and `CHANGELOG.md`) or via `workflow_dispatch`. [094f971]
