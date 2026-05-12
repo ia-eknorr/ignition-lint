@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.5.1] - 2026-05-10
+## [0.5.1] - 2026-05-12
 
 ### Added
 - Docusaurus 3 documentation site under `documentation/`, published to GitHub Pages at https://bw-design-group.github.io/ignition-lint on push to `main`. Covers tutorial, per-rule user guides, full per-rule technical references with per-option breakdowns, usage (CLI, pre-commit, GitHub Actions, whitelist, debug output), developer guide (architecture, creating rules, API reference, testing, troubleshooting), and a changelog mirror auto-copied from this file. [094f971]
@@ -303,7 +303,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Initial tracked release
 
-[Unreleased]: https://github.com/bw-design-group/ignition-lint/compare/v0.4.1...HEAD
+[Unreleased]: https://github.com/bw-design-group/ignition-lint/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/bw-design-group/ignition-lint/compare/v0.5.0-rc1...v0.5.1
 [0.4.1]: https://github.com/bw-design-group/ignition-lint/compare/v0.4.0...v0.4.1
 [0.4.0]: https://github.com/bw-design-group/ignition-lint/compare/v0.3.6...v0.4.0
 [0.3.6]: https://github.com/bw-design-group/ignition-lint/compare/v0.3.5...v0.3.6
