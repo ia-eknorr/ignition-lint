@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-05-12
+
+### Added
+- Docusaurus 3 documentation site under `documentation/`, published to GitHub Pages at https://bw-design-group.github.io/ignition-lint on push to `main`. Covers tutorial, per-rule user guides, full per-rule technical references with per-option breakdowns, usage (CLI, pre-commit, GitHub Actions, whitelist, debug output), developer guide (architecture, creating rules, API reference, testing, troubleshooting), and a changelog mirror auto-copied from this file. [094f971]
+- `.github/workflows/deploy-docs.yml` — builds the docs site and deploys to GitHub Pages on push to `main` (path-filtered to `documentation/**` and `CHANGELOG.md`) or via `workflow_dispatch`. [094f971]
+
+### Changed
+- README rewritten as a 53-line landing page that hands off to the published docs (was a 1170-line monolithic doc that duplicated content now living in the docs site). [094f971]
+
 ## [0.5.0] - 2026-05-10
 
 ### Added
@@ -294,18 +303,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Initial tracked release
 
-[Unreleased]: https://github.com/design-group/ignition-lint/compare/v0.5.0...HEAD
-[0.5.0]: https://github.com/design-group/ignition-lint/compare/v0.5.0-rc1...v0.5.0
-[0.4.1]: https://github.com/design-group/ignition-lint/compare/v0.4.0...v0.4.1
-[0.4.0]: https://github.com/design-group/ignition-lint/compare/v0.3.6...v0.4.0
-[0.3.6]: https://github.com/design-group/ignition-lint/compare/v0.3.5...v0.3.6
-[0.3.5]: https://github.com/design-group/ignition-lint/compare/v0.3.4...v0.3.5
-[0.3.4]: https://github.com/design-group/ignition-lint/compare/v0.3.3...v0.3.4
-[0.3.3]: https://github.com/design-group/ignition-lint/compare/v0.3.2...v0.3.3
-[0.3.2]: https://github.com/design-group/ignition-lint/compare/v0.3.1...v0.3.2
-[0.3.1]: https://github.com/design-group/ignition-lint/compare/v0.3.0...v0.3.1
-[0.3.0]: https://github.com/design-group/ignition-lint/compare/v0.2.10...v0.3.0
-[0.2.10]: https://github.com/design-group/ignition-lint/compare/v0.2.9...v0.2.10
+[Unreleased]: https://github.com/bw-design-group/ignition-lint/compare/v0.5.1...HEAD
+[0.5.1]: https://github.com/bw-design-group/ignition-lint/compare/v0.5.0-rc1...v0.5.1
+[0.4.1]: https://github.com/bw-design-group/ignition-lint/compare/v0.4.0...v0.4.1
+[0.4.0]: https://github.com/bw-design-group/ignition-lint/compare/v0.3.6...v0.4.0
+[0.3.6]: https://github.com/bw-design-group/ignition-lint/compare/v0.3.5...v0.3.6
+[0.3.5]: https://github.com/bw-design-group/ignition-lint/compare/v0.3.4...v0.3.5
+[0.3.4]: https://github.com/bw-design-group/ignition-lint/compare/v0.3.3...v0.3.4
+[0.3.3]: https://github.com/bw-design-group/ignition-lint/compare/v0.3.2...v0.3.3
+[0.3.2]: https://github.com/bw-design-group/ignition-lint/compare/v0.3.1...v0.3.2
+[0.3.1]: https://github.com/bw-design-group/ignition-lint/compare/v0.3.0...v0.3.1
+[0.3.0]: https://github.com/bw-design-group/ignition-lint/compare/v0.2.10...v0.3.0
+[0.2.10]: https://github.com/bw-design-group/ignition-lint/compare/v0.2.9...v0.2.10
 [0.2.9]: https://github.com/bw-design-group/ignition-lint/compare/v0.2.8...v0.2.9
 [0.2.8]: https://github.com/bw-design-group/ignition-lint/compare/v0.2.7...v0.2.8
 [0.2.7]: https://github.com/bw-design-group/ignition-lint/compare/v0.2.6...v0.2.7
