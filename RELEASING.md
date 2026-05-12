@@ -68,7 +68,7 @@ git push origin v0.3.1
 **This triggers the automated PyPI publish workflow.**
 
 ### Step 4: Create GitHub Release (Optional but Recommended)
-1. Go to https://github.com/design-group/ignition-lint/releases/new
+1. Go to https://github.com/bw-design-group/ignition-lint/releases/new
 2. Select tag: v0.3.1
 3. Release title: "v0.3.1"
 4. Click "Generate release notes" or copy from CHANGELOG.md
@@ -83,7 +83,7 @@ The publish workflow automatically:
 3. Publishes to PyPI using configured token
 
 **Monitor progress:**
-- Actions: https://github.com/design-group/ignition-lint/actions
+- Actions: https://github.com/bw-design-group/ignition-lint/actions
 - PyPI: https://pypi.org/project/ignition-lint/
 
 ### Step 6: Verify Installation
