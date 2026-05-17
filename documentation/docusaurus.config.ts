@@ -30,7 +30,19 @@ const config: Config = {
     locales: ['en'],
   },
 
-  plugins: ['docusaurus-plugin-llms-txt'],
+  plugins: [
+    [
+      '@signalwire/docusaurus-plugin-llms-txt',
+      {
+        siteTitle: 'ignition-lint',
+        siteDescription: 'Static analysis for Ignition Perspective views',
+        depth: 2,
+        content: {
+          enableLlmsFullTxt: true,
+        },
+      },
+    ],
+  ],
 
   presets: [
     [
