@@ -5,11 +5,18 @@
 > **[bw-design-group/ignition-lint](https://github.com/bw-design-group/ignition-lint)**,
 > which is far ahead of this repository and actively maintained.
 >
-> - **pre-commit / CLI users:** point your config at `bw-design-group/ignition-lint`
->   (or `pip install ign-lint`). The `ign-lint` package on PyPI is the maintained line.
+> **Switching is not a 1:1 repoint.** bw's rule-config schema and CLI/Action interface
+> differ from this project's, so you'll need to rework your config (and, for Action
+> users, your workflow) — not just change the reference. There is no formal migration
+> guide (this project saw limited use); follow the current bw README for the config
+> format and supported flags.
+>
+> - **pre-commit / CLI users:** move to `bw-design-group/ignition-lint` (or
+>   `pip install ign-lint`, the maintained PyPI line) and port your config to bw's schema.
 > - **GitHub Action users (`uses: ia-eknorr/ignition-lint@v2.x`):** bw does not ship a
->   GitHub Action. Replace the action step with `pip install ign-lint` plus a CLI call
->   (see the bw README). The `@v2.x` tags here remain resolvable but are frozen.
+>   GitHub Action. Replace the action step with `pip install ign-lint` plus a CLI call,
+>   and move your `component_style`/`parameter_style` inputs into bw's config file. The
+>   `@v2.x` tags here remain resolvable but are frozen.
 >
 > This repository is archived and read-only as of June 2026.
 
