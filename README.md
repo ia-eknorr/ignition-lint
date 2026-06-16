@@ -1,5 +1,26 @@
 # Ignition Lint Documentation
 
+> [!IMPORTANT]
+> **This project has moved.** Active development now happens at Design Group's
+> **[bw-design-group/ignition-lint](https://github.com/bw-design-group/ignition-lint)**,
+> which is far ahead of this repository and actively maintained.
+>
+> **Switching is not a 1:1 repoint.** Design Group's rule-config schema and CLI/Action
+> interface differ from this project's, so you'll need to rework your config (and, for
+> Action users, your workflow) — not just change the reference. There is no formal
+> migration guide (this project saw limited use); follow the current Design Group README
+> for the config format and supported flags.
+>
+> - **pre-commit / CLI users:** move to `bw-design-group/ignition-lint` (or
+>   `pip install ign-lint`, the maintained PyPI line) and port your config to Design
+>   Group's schema.
+> - **GitHub Action users (`uses: ia-eknorr/ignition-lint@v2.x`):** Design Group does not
+>   ship a GitHub Action. Replace the action step with `pip install ign-lint` plus a CLI
+>   call, and move your `component_style`/`parameter_style` inputs into Design Group's
+>   config file. The `@v2.x` tags here remain resolvable but are frozen.
+>
+> This repository is archived and read-only as of June 2026.
+
 ## Overview
 
 Ignition Lint is a Python framework designed to analyze and lint Ignition Perspective view.json files. It provides a structured way to parse view files, build an object model representation, and apply customizable linting rules to ensure code quality and consistency across your Ignition projects.
