@@ -11,7 +11,7 @@ packages = [{ include = "ignition_lint", from = "src" }]
 [tool.poetry.dependencies]
 python = ">=3.9,<3.13"
 pylint = "*"
-ignition-api-stubs = "^8.1.48.post1"
+ignition-api-stubs = "^8.1.48-post.0"
 pre-commit = "^4.2.0"
 
 [tool.poetry.group.dev.dependencies]
